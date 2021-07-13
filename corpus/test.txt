@@ -46,7 +46,7 @@ Module with prefix
 ==================
 
 module my-module-name {
-    prefix "mymod";
+    prefix mymod;
 }
 
 ---
@@ -54,7 +54,7 @@ module my-module-name {
 (module
   module_name: (identifier)
   module_block: (module_block
-    (prefix_statement (string))))
+    (prefix_statement (identifier))))
 
 ========================================
 Module with all module header statements
@@ -63,7 +63,7 @@ Module with all module header statements
 module my-module-name {
     yang-version "1.1";
     namespace "https://foo.bar.com/my-module-name";
-    prefix "mymod";
+    prefix mymod;
 }
 
 ---
@@ -73,4 +73,4 @@ module my-module-name {
   module_block: (module_block
     (yang_version_statement (string))
     (namespace_statement (string))
-    (prefix_statement (string))))
+    (prefix_statement (identifier))))

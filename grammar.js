@@ -35,7 +35,7 @@ module.exports = grammar({
         ),
 
         prefix_statement: $ => seq(
-            "prefix", $.string, $._stmsep
+            "prefix", $.identifier, $._stmsep
         ),
 
         /*

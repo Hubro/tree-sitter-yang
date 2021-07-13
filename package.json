@@ -1,0 +1,19 @@
+{
+  "name": "tree-sitter-yang",
+  "version": "0.0.0",
+  "description": "Tree-sitter grammar for YANG",
+  "main": "bindings/node",
+  "repository": null,
+  "author": "Tomas Sandven",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "tree-sitter-cli": "^0.20.0"
+  },
+  "scripts": {
+    "build": "tree-sitter generate",
+    "test": "tree-sitter test"
+  },
+  "dependencies": {
+    "nan": "^2.14.2"
+  }
+}

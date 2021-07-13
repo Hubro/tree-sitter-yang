@@ -1,0 +1,16 @@
+# Build output
+/src
+/node_modules/
+/Cargo.toml
+/binding.gyp
+/bindings/
+
+# Test data
+/yang-models/
+
+# Local development config
+/.python-version
+/.node-version
+/.nvmrc
+/.envrc
+/.nvimrc

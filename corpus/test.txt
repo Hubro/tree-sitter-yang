@@ -9,7 +9,7 @@ module my-module-name {
 
 (module
     module_name: (identifier)
-    module_block: (module_block))
+    module_block: (block))
 
 ========================
 Module with yang-version
@@ -23,38 +23,8 @@ module my-module-name {
 
 (module
   module_name: (identifier)
-  module_block: (module_block
-    (yang_version_statement (string))))
-
-=====================
-Module with namespace
-=====================
-
-module my-module-name {
-    namespace "https://foo.bar.com/my-module-name";
-}
-
----
-
-(module
-  module_name: (identifier)
-  module_block: (module_block
-    (namespace_statement (string))))
-
-==================
-Module with prefix
-==================
-
-module my-module-name {
-    prefix mymod;
-}
-
----
-
-(module
-  module_name: (identifier)
-  module_block: (module_block
-    (prefix_statement (identifier))))
+  module_block: (block
+    (statement (statement_keyword) (value (string)))))
 
 ========================================
 Module with all module header statements
@@ -70,7 +40,88 @@ module my-module-name {
 
 (module
   module_name: (identifier)
-  module_block: (module_block
-    (yang_version_statement (string))
-    (namespace_statement (string))
-    (prefix_statement (identifier))))
+  module_block: (block
+    (statement (statement_keyword) (value (string)))
+    (statement (statement_keyword) (value (string)))
+    (statement (statement_keyword) (value (identifier)))))
+
+=================================
+Module with a bunch of statements
+=================================
+
+module my-module-name {
+    yang-version "1.1";
+    namespace "https://foo.bar.com/my-module-name";
+    prefix mymod;
+
+    import ietf-inet-types {
+        prefix inet;
+    }
+
+    organization "Foo";
+    contact "Foo post <post@foo.com>";
+
+    revision 2019-11-16 {
+        description
+            "This description starts on the next line!";
+        reference
+            "So does this reference statement!";
+    }
+
+    identity my-identity {
+        description "This is a YANG identity.";
+        reference "Foobar!";
+    }
+}
+
+---
+
+(module
+  module_name: (identifier)
+  module_block: (block
+    (statement (statement_keyword) (value (string)))
+    (statement (statement_keyword) (value (string)))
+    (statement (statement_keyword) (value (identifier)))
+    (statement (statement_keyword) (value (identifier)) (block
+      (statement (statement_keyword) (value (identifier)))))
+    (statement (statement_keyword) (value (string)))
+    (statement (statement_keyword) (value (string)))
+    (statement (statement_keyword) (value (date)) (block
+      (statement (statement_keyword) (value (string)))
+      (statement (statement_keyword) (value (string)))))
+    (statement (statement_keyword) (value (identifier)) (block
+      (statement (statement_keyword) (value (string)))
+      (statement (statement_keyword) (value (string)))))))
+
+=============================
+Module with augment statement
+=============================
+
+module my-module-name {
+    yang-version "1.1";
+    namespace "https://foo.bar.com/my-module-name";
+    prefix mymod;
+
+    augment /ncs:devices/device {
+        container foo {
+            leaf bar {
+                type string;
+                description "Foo bar.";
+            }
+        }
+    }
+}
+
+---
+
+(module
+  module_name: (identifier)
+  module_block: (block
+    (statement (statement_keyword) (value (string)))
+    (statement (statement_keyword) (value (string)))
+    (statement (statement_keyword) (value (identifier)))
+    (statement (statement_keyword) (value (keypath (node_identifier (identifier) (identifier)) (node_identifier (identifier)))) (block
+      (statement (statement_keyword) (value (identifier)) (block
+        (statement (statement_keyword) (value (identifier)) (block
+          (statement (statement_keyword) (value (identifier)))
+          (statement (statement_keyword) (value (string)))))))))))

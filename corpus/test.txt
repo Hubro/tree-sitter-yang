@@ -7,9 +7,10 @@ module my-module-name {
 
 ---
 
-(module
+(yang
+  (module
     module_name: (identifier)
-    module_block: (block))
+    module_block: (block)))
 
 ========================
 Module with yang-version
@@ -21,10 +22,27 @@ module my-module-name {
 
 ---
 
-(module
-  module_name: (identifier)
-  module_block: (block
-    (statement (statement_keyword) (value (string)))))
+(yang
+  (module
+    module_name: (identifier)
+    module_block: (block
+      (statement (statement_keyword) (value (string))))))
+
+===========================
+Submodule with yang-version
+===========================
+
+submodule my-module-name {
+    yang-version "1.1";
+}
+
+---
+
+(yang
+  (submodule
+    submodule_name: (identifier)
+    submodule_block: (block
+      (statement (statement_keyword) (value (string))))))
 
 ========================================
 Module with all module header statements
@@ -38,12 +56,13 @@ module my-module-name {
 
 ---
 
-(module
-  module_name: (identifier)
-  module_block: (block
-    (statement (statement_keyword) (value (string)))
-    (statement (statement_keyword) (value (string)))
-    (statement (statement_keyword) (value (identifier)))))
+(yang
+  (module
+    module_name: (identifier)
+    module_block: (block
+      (statement (statement_keyword) (value (string)))
+      (statement (statement_keyword) (value (string)))
+      (statement (statement_keyword) (value (identifier))))))
 
 =================================
 Module with a bunch of statements
@@ -76,22 +95,23 @@ module my-module-name {
 
 ---
 
-(module
-  module_name: (identifier)
-  module_block: (block
-    (statement (statement_keyword) (value (string)))
-    (statement (statement_keyword) (value (string)))
-    (statement (statement_keyword) (value (identifier)))
-    (statement (statement_keyword) (value (identifier)) (block
-      (statement (statement_keyword) (value (identifier)))))
-    (statement (statement_keyword) (value (string)))
-    (statement (statement_keyword) (value (string)))
-    (statement (statement_keyword) (value (date)) (block
+(yang
+  (module
+    module_name: (identifier)
+    module_block: (block
       (statement (statement_keyword) (value (string)))
-      (statement (statement_keyword) (value (string)))))
-    (statement (statement_keyword) (value (identifier)) (block
       (statement (statement_keyword) (value (string)))
-      (statement (statement_keyword) (value (string)))))))
+      (statement (statement_keyword) (value (identifier)))
+      (statement (statement_keyword) (value (identifier)) (block
+        (statement (statement_keyword) (value (identifier)))))
+      (statement (statement_keyword) (value (string)))
+      (statement (statement_keyword) (value (string)))
+      (statement (statement_keyword) (value (date)) (block
+        (statement (statement_keyword) (value (string)))
+        (statement (statement_keyword) (value (string)))))
+      (statement (statement_keyword) (value (identifier)) (block
+        (statement (statement_keyword) (value (string)))
+        (statement (statement_keyword) (value (string))))))))
 
 =============================
 Module with augment statement
@@ -114,14 +134,62 @@ module my-module-name {
 
 ---
 
-(module
-  module_name: (identifier)
-  module_block: (block
-    (statement (statement_keyword) (value (string)))
-    (statement (statement_keyword) (value (string)))
-    (statement (statement_keyword) (value (identifier)))
-    (statement (statement_keyword) (value (keypath (node_identifier (identifier) (identifier)) (node_identifier (identifier)))) (block
-      (statement (statement_keyword) (value (identifier)) (block
+(yang
+  (module
+    module_name: (identifier)
+    module_block: (block
+      (statement (statement_keyword) (value (string)))
+      (statement (statement_keyword) (value (string)))
+      (statement (statement_keyword) (value (identifier)))
+      (statement (statement_keyword) (value (keypath)) (block
         (statement (statement_keyword) (value (identifier)) (block
-          (statement (statement_keyword) (value (identifier)))
-          (statement (statement_keyword) (value (string)))))))))))
+          (statement (statement_keyword) (value (identifier)) (block
+            (statement (statement_keyword) (value (built_in_type)))
+            (statement (statement_keyword) (value (string))))))))))))
+
+=========================================
+Module with comments at various locations
+=========================================
+
+// Comment outside of the module
+module my-module-name {   // Comment on the same line as the module!
+    // Comment inside the module block
+    yang-version "1.1";
+    namespace "https://foo.bar.com/my-module-name";
+    prefix mymod;   // Comment on the same line as an expression
+
+    augment /ncs:devices/device {
+        container foo {
+            leaf bar {
+                type string;
+                description   // Comment between a keyword and its value!
+                    "Foo bar.";
+            }
+
+            /*
+            leaf invisible {
+                type bool;
+                description "I am entirely commented out!";
+            }
+            */
+        }
+    }
+}
+
+---
+
+(yang
+  (comment)
+  (module
+    module_name: (identifier)
+    module_block: (block (comment)
+      (comment)
+      (statement (statement_keyword) (value (string)))
+      (statement (statement_keyword) (value (string)))
+      (statement (statement_keyword) (value (identifier))) (comment)
+      (statement (statement_keyword) (value (keypath)) (block
+        (statement (statement_keyword) (value (identifier)) (block
+          (statement (statement_keyword) (value (identifier)) (block
+            (statement (statement_keyword) (value (built_in_type)))
+            (statement (statement_keyword) (comment) (value (string)))))
+          (comment))))))))

@@ -1,14 +1,40 @@
+
+const identifier = /[a-zA-Z_][a-zA-Z0-9-_.]*/;
+
+const node_identifier = () => seq(
+    optional(seq(identifier, token.immediate(":"))),
+    identifier
+);
+
+const relative_keypath = () => seq(node_identifier(), absolute_keypath());
+const absolute_keypath = () => repeat1(seq('/', node_identifier()));
+
 module.exports = grammar({
     name: "yang",
 
     word: $ => $.identifier,
 
+    extras: $ => [
+        /\s+/,
+        $.comment,
+    ],
+
     rules: {
-        // The root node
+        yang: $ => choice(
+            $.module,
+            $.submodule,
+        ),
+
         module: $ => seq(
-            choice('module', 'submodule'),
+            'module',
             field('module_name', $.identifier),
             field('module_block', $.block),
+        ),
+
+        submodule: $ => seq(
+            'submodule',
+            field('submodule_name', $.identifier),
+            field('submodule_block', $.block),
         ),
 
         block: $ => seq(
@@ -28,6 +54,7 @@ module.exports = grammar({
         ),
 
         value: $ => choice(
+            $.built_in_type,
             $.identifier,
             $.string,
             $.date,
@@ -44,18 +71,25 @@ module.exports = grammar({
 
         date: $ => /\d{4}-\d{2}-\d{2}/,
 
-        keypath: $ => choice(
-            $._absolute_keypath,
-            $._relative_keypath,
+        keypath: $ => token(
+            choice(
+                absolute_keypath(),
+                relative_keypath(),
+            )
         ),
 
-        _relative_keypath: $ => seq($.node_identifier, $._absolute_keypath),
-        _absolute_keypath: $ => repeat1(seq('/', $.node_identifier)),
-
-        node_identifier: $ => seq(
-            optional(seq($.identifier, token.immediate(":"))),
-            $.identifier
-        ),
+        // Copied from "tree-sitter-javascript":
+        //
+        // https://github.com/tree-sitter/tree-sitter-javascript/blob/2c5b138ea488259dbf11a34595042eb261965259/grammar.js#L907
+        //
+        comment: $ => token(choice(
+            seq('//', /.*/),
+            seq(
+                '/*',
+                /[^*]*\*+([^/*][^*]*\*+)*/,
+                '/'
+            )
+        )),
 
         /*
          * Misc
@@ -63,6 +97,28 @@ module.exports = grammar({
 
         _sep: $ => /\s+/,      // Separator
         _stmtend: $ => ';',    // End of statement
+
+        built_in_type: $ => choice(
+            'binary',
+            'bits',
+            'boolean',
+            'decimal64',
+            'empty',
+            'enumeration',
+            'identityref',
+            'instance-identifier',
+            'int8',
+            'int16',
+            'int32',
+            'int64',
+            'leafref',
+            'string',
+            'uint8',
+            'uint16',
+            'uint32',
+            'uint64',
+            'union',
+        ),
 
         statement_keyword: $ => choice(
             'action',
@@ -135,4 +191,4 @@ module.exports = grammar({
             'yin-element',
         )
     },
-})
+});

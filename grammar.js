@@ -1,18 +1,18 @@
 
 const identifier = /[a-zA-Z_][a-zA-Z0-9-_.]*/;
 
-const node_identifier = () => seq(
-    optional(seq(identifier, token.immediate(":"))),
-    identifier
-);
+// A node identifier just refers to the name of a YANG node. Commonly used to
+// refer to a custom type or a grouping. A local reference will just be a
+// regular identifier. A reference to a different module will have a prefix.
+const node_identifier = /([a-zA-Z_][a-zA-Z0-9-_.]*:)?[a-zA-Z_][a-zA-Z0-9-_.]*/;
 
-const relative_keypath = () => seq(node_identifier(), absolute_keypath());
-const absolute_keypath = () => repeat1(seq('/', node_identifier()));
+const prefix = () => seq(identifier, token.immediate(":"))
 
-module.exports = grammar({
+const relative_keypath = () => seq(node_identifier, absolute_keypath());
+const absolute_keypath = () => repeat1(seq('/', node_identifier));
+
+const yang_grammar = grammar({
     name: "yang",
-
-    word: $ => $.identifier,
 
     extras: $ => [
         /\s+/,
@@ -44,24 +44,43 @@ module.exports = grammar({
         ),
 
         statement: $ => seq(
-            $.statement_keyword,
-            $._sep,
-            $.value,
             choice(
-                $._stmtend,
-                $.block,
+                $.statement_keyword,
+                $.extension_keyword,
+            ),
+            // A statement can either have
+            // - An argument
+            // - An argument and a block
+            // - Just a block
+            choice(
+                // An argument
+                seq($.argument, ';'),
+
+                // An argument and a block
+                seq($.argument, $.block),
+
+                // Just a block
+                $.block
             )
         ),
 
-        value: $ => choice(
+        // Extensions in YANG are just an identifier with a prefix, for example:
+        //
+        //   tailf:actionpoint
+        //
+        extension_keyword: $ => seq(prefix(), token.immediate(identifier)),
+
+        argument: $ => choice(
             $.built_in_type,
-            $.identifier,
+            $.node_identifier,
             $.string,
             $.date,
-            $.keypath,
+            $.keypath
         ),
 
-        identifier: $ => /[a-zA-Z_][a-zA-Z0-9-_.]*/,
+        identifier: $ => identifier,
+
+        node_identifier: $ => node_identifier,
 
         string: $ => seq(
             '"',
@@ -94,9 +113,6 @@ module.exports = grammar({
         /*
          * Misc
          */
-
-        _sep: $ => /\s+/,      // Separator
-        _stmtend: $ => ';',    // End of statement
 
         built_in_type: $ => choice(
             'binary',
@@ -192,3 +208,5 @@ module.exports = grammar({
         )
     },
 });
+
+module.exports = yang_grammar

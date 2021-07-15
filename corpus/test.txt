@@ -26,7 +26,7 @@ module my-module-name {
   (module
     module_name: (identifier)
     module_block: (block
-      (statement (statement_keyword) (value (string))))))
+      (statement (statement_keyword) (argument (string))))))
 
 ===========================
 Submodule with yang-version
@@ -42,7 +42,7 @@ submodule my-module-name {
   (submodule
     submodule_name: (identifier)
     submodule_block: (block
-      (statement (statement_keyword) (value (string))))))
+      (statement (statement_keyword) (argument (string))))))
 
 ========================================
 Module with all module header statements
@@ -51,7 +51,7 @@ Module with all module header statements
 module my-module-name {
     yang-version "1.1";
     namespace "https://foo.bar.com/my-module-name";
-    prefix mymod;
+    prefix my-mod;
 }
 
 ---
@@ -60,9 +60,9 @@ module my-module-name {
   (module
     module_name: (identifier)
     module_block: (block
-      (statement (statement_keyword) (value (string)))
-      (statement (statement_keyword) (value (string)))
-      (statement (statement_keyword) (value (identifier))))))
+      (statement (statement_keyword) (argument (string)))
+      (statement (statement_keyword) (argument (string)))
+      (statement (statement_keyword) (argument (node_identifier))))))
 
 =================================
 Module with a bunch of statements
@@ -99,19 +99,19 @@ module my-module-name {
   (module
     module_name: (identifier)
     module_block: (block
-      (statement (statement_keyword) (value (string)))
-      (statement (statement_keyword) (value (string)))
-      (statement (statement_keyword) (value (identifier)))
-      (statement (statement_keyword) (value (identifier)) (block
-        (statement (statement_keyword) (value (identifier)))))
-      (statement (statement_keyword) (value (string)))
-      (statement (statement_keyword) (value (string)))
-      (statement (statement_keyword) (value (date)) (block
-        (statement (statement_keyword) (value (string)))
-        (statement (statement_keyword) (value (string)))))
-      (statement (statement_keyword) (value (identifier)) (block
-        (statement (statement_keyword) (value (string)))
-        (statement (statement_keyword) (value (string))))))))
+      (statement (statement_keyword) (argument (string)))
+      (statement (statement_keyword) (argument (string)))
+      (statement (statement_keyword) (argument (node_identifier)))
+      (statement (statement_keyword) (argument (node_identifier)) (block
+        (statement (statement_keyword) (argument (node_identifier)))))
+      (statement (statement_keyword) (argument (string)))
+      (statement (statement_keyword) (argument (string)))
+      (statement (statement_keyword) (argument (date)) (block
+        (statement (statement_keyword) (argument (string)))
+        (statement (statement_keyword) (argument (string)))))
+      (statement (statement_keyword) (argument (node_identifier)) (block
+        (statement (statement_keyword) (argument (string)))
+        (statement (statement_keyword) (argument (string))))))))
 
 =============================
 Module with augment statement
@@ -138,14 +138,14 @@ module my-module-name {
   (module
     module_name: (identifier)
     module_block: (block
-      (statement (statement_keyword) (value (string)))
-      (statement (statement_keyword) (value (string)))
-      (statement (statement_keyword) (value (identifier)))
-      (statement (statement_keyword) (value (keypath)) (block
-        (statement (statement_keyword) (value (identifier)) (block
-          (statement (statement_keyword) (value (identifier)) (block
-            (statement (statement_keyword) (value (built_in_type)))
-            (statement (statement_keyword) (value (string))))))))))))
+      (statement (statement_keyword) (argument (string)))
+      (statement (statement_keyword) (argument (string)))
+      (statement (statement_keyword) (argument (node_identifier)))
+      (statement (statement_keyword) (argument (keypath)) (block
+        (statement (statement_keyword) (argument (node_identifier)) (block
+          (statement (statement_keyword) (argument (node_identifier)) (block
+            (statement (statement_keyword) (argument (built_in_type)))
+            (statement (statement_keyword) (argument (string))))))))))))
 
 =========================================
 Module with comments at various locations
@@ -160,6 +160,8 @@ module my-module-name {   // Comment on the same line as the module!
 
     augment /ncs:devices/device {
         container foo {
+            uses external-module:some-grouping;
+
             leaf bar {
                 type string;
                 description   // Comment between a keyword and its value!
@@ -184,12 +186,56 @@ module my-module-name {   // Comment on the same line as the module!
     module_name: (identifier)
     module_block: (block (comment)
       (comment)
-      (statement (statement_keyword) (value (string)))
-      (statement (statement_keyword) (value (string)))
-      (statement (statement_keyword) (value (identifier))) (comment)
-      (statement (statement_keyword) (value (keypath)) (block
-        (statement (statement_keyword) (value (identifier)) (block
-          (statement (statement_keyword) (value (identifier)) (block
-            (statement (statement_keyword) (value (built_in_type)))
-            (statement (statement_keyword) (comment) (value (string)))))
+      (statement (statement_keyword) (argument (string)))
+      (statement (statement_keyword) (argument (string)))
+      (statement (statement_keyword) (argument (node_identifier))) (comment)
+      (statement (statement_keyword) (argument (keypath)) (block
+        (statement (statement_keyword) (argument (node_identifier)) (block
+          (statement (statement_keyword) (argument (node_identifier)))
+          (statement (statement_keyword) (argument (node_identifier)) (block
+            (statement (statement_keyword) (argument (built_in_type)))
+            (statement (statement_keyword) (comment) (argument (string)))))
           (comment))))))))
+
+==========================
+Module with extension call
+==========================
+
+module my-module-name {
+    augment /ncs:devices/device {
+        container new-container {
+            tailf:action add-device {
+                tailf:actionpoint my-module-name-add-device;
+                tailf:info
+                    "Add a device!";
+                input {
+                    uses inventory-actions:device-input;
+                }
+                output {
+                    leaf result {
+                        type string;
+                        description "Action result.";
+                    }
+                }
+            }
+        }
+    }
+}
+
+---
+
+(yang
+  (module
+    module_name: (identifier)
+    module_block: (block
+      (statement (statement_keyword) (argument (keypath)) (block
+        (statement (statement_keyword) (argument (node_identifier)) (block
+          (statement (extension_keyword) (argument (node_identifier)) (block
+            (statement (extension_keyword) (argument (node_identifier)))
+            (statement (extension_keyword) (argument (string)))
+            (statement (statement_keyword) (block
+              (statement (statement_keyword) (argument (node_identifier)))))
+            (statement (statement_keyword) (block
+              (statement (statement_keyword) (argument (node_identifier)) (block
+                (statement (statement_keyword) (argument (built_in_type)))
+                (statement (statement_keyword) (argument (string))))))))))))))))

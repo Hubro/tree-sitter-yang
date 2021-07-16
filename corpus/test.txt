@@ -1,121 +1,58 @@
-============
+================================================================================
 Empty module
-============
+================================================================================
 
 module my-module-name {
 }
 
----
+--------------------------------------------------------------------------------
 
 (yang
   (module
     module_name: (identifier)
     module_block: (block)))
 
-========================
+================================================================================
 Module with yang-version
-========================
+================================================================================
 
 module my-module-name {
     yang-version "1.1";
 }
 
----
+--------------------------------------------------------------------------------
 
 (yang
   (module
     module_name: (identifier)
     module_block: (block
-      (statement (statement_keyword) (argument (string))))))
+      (statement
+        (statement_keyword)
+        (argument
+          (string))))))
 
-===========================
+================================================================================
 Submodule with yang-version
-===========================
+================================================================================
 
 submodule my-module-name {
     yang-version "1.1";
 }
 
----
+--------------------------------------------------------------------------------
 
 (yang
   (submodule
     submodule_name: (identifier)
     submodule_block: (block
-      (statement (statement_keyword) (argument (string))))))
+      (statement
+        (statement_keyword)
+        (argument
+          (string))))))
 
-========================================
-Module with all module header statements
-========================================
-
-module my-module-name {
-    yang-version "1.1";
-    namespace "https://foo.bar.com/my-module-name";
-    prefix my-mod;
-}
-
----
-
-(yang
-  (module
-    module_name: (identifier)
-    module_block: (block
-      (statement (statement_keyword) (argument (string)))
-      (statement (statement_keyword) (argument (string)))
-      (statement (statement_keyword) (argument (node_identifier))))))
-
-=================================
-Module with a bunch of statements
-=================================
-
-module my-module-name {
-    yang-version "1.1";
-    namespace "https://foo.bar.com/my-module-name";
-    prefix mymod;
-
-    import ietf-inet-types {
-        prefix inet;
-    }
-
-    organization "Foo";
-    contact "Foo post <post@foo.com>";
-
-    revision 2019-11-16 {
-        description
-            "This description starts on the next line!";
-        reference
-            "So does this reference statement!";
-    }
-
-    identity my-identity {
-        description "This is a YANG identity.";
-        reference "Foobar!";
-    }
-}
-
----
-
-(yang
-  (module
-    module_name: (identifier)
-    module_block: (block
-      (statement (statement_keyword) (argument (string)))
-      (statement (statement_keyword) (argument (string)))
-      (statement (statement_keyword) (argument (node_identifier)))
-      (statement (statement_keyword) (argument (node_identifier)) (block
-        (statement (statement_keyword) (argument (node_identifier)))))
-      (statement (statement_keyword) (argument (string)))
-      (statement (statement_keyword) (argument (string)))
-      (statement (statement_keyword) (argument (date)) (block
-        (statement (statement_keyword) (argument (string)))
-        (statement (statement_keyword) (argument (string)))))
-      (statement (statement_keyword) (argument (node_identifier)) (block
-        (statement (statement_keyword) (argument (string)))
-        (statement (statement_keyword) (argument (string))))))))
-
-=============================
+================================================================================
 Module with augment statement
-=============================
+================================================================================
 
 module my-module-name {
     yang-version "1.1";
@@ -132,81 +69,207 @@ module my-module-name {
     }
 }
 
----
+--------------------------------------------------------------------------------
 
 (yang
   (module
     module_name: (identifier)
     module_block: (block
-      (statement (statement_keyword) (argument (string)))
-      (statement (statement_keyword) (argument (string)))
-      (statement (statement_keyword) (argument (node_identifier)))
-      (statement (statement_keyword) (argument (keypath)) (block
-        (statement (statement_keyword) (argument (node_identifier)) (block
-          (statement (statement_keyword) (argument (node_identifier)) (block
-            (statement (statement_keyword) (argument (built_in_type)))
-            (statement (statement_keyword) (argument (string))))))))))))
+      (statement
+        (statement_keyword)
+        (argument
+          (string)))
+      (statement
+        (statement_keyword)
+        (argument
+          (string)))
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier)))
+      (statement
+        (statement_keyword)
+        (argument
+          (keypath))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (node_identifier))
+                (block
+                  (statement
+                    (statement_keyword)
+                    (argument
+                      (built_in_type)))
+                  (statement
+                    (statement_keyword)
+                    (argument
+                      (string))))))))))))
 
-=========================================
-Module with comments at various locations
-=========================================
+================================================================================
+All permutations of string usage
+================================================================================
 
-// Comment outside of the module
-module my-module-name {   // Comment on the same line as the module!
-    // Comment inside the module block
-    yang-version "1.1";
-    namespace "https://foo.bar.com/my-module-name";
-    prefix mymod;   // Comment on the same line as an expression
+module my-string-testing-module {
+    namespace "https://foo.bar.com/my-string-testing-module";
+    prefix string-test;
 
-    augment /ncs:devices/device {
-        container foo {
-            uses external-module:some-grouping;
+    container lets-test-some-strings {
+        description "Regular, boring, double quoted string";
+        description 'Single tick stings!';
 
-            leaf bar {
-                type string;
-                description   // Comment between a keyword and its value!
-                    "Foo bar.";
-            }
+        description "Can contain \"escaped\" double quotes";
+        description 'Can contain \'escaped\' single quotes';
 
-            /*
-            leaf invisible {
-                type bool;
-                description "I am entirely commented out!";
-            }
-            */
-        }
+        description "Multi-line, multi paragraph string.
+
+                     More here,
+
+                     Even more here.";
+
+        description 'Multi-line, multi paragraph string.
+
+                     More here,
+
+                     Even more here.';
+
+        description
+          "Multi-line, multi paragraph string, starting on the next line.
+
+           More here,
+
+           Even more here.";
+
+        description
+          'Multi-line, multi paragraph string.
+
+           More here,
+
+           Even more here.';
+
+        description "String split "
+                  + "over multiple lines "
+                  + "is also normal. "
+                  + 'Mixed tick strings is not really normal, but '
+                  + "is none the less syntactically valid.";
     }
 }
 
----
+--------------------------------------------------------------------------------
 
 (yang
-  (comment)
   (module
     module_name: (identifier)
-    module_block: (block (comment)
-      (comment)
-      (statement (statement_keyword) (argument (string)))
-      (statement (statement_keyword) (argument (string)))
-      (statement (statement_keyword) (argument (node_identifier))) (comment)
-      (statement (statement_keyword) (argument (keypath)) (block
-        (statement (statement_keyword) (argument (node_identifier)) (block
-          (statement (statement_keyword) (argument (node_identifier)))
-          (statement (statement_keyword) (argument (node_identifier)) (block
-            (statement (statement_keyword) (argument (built_in_type)))
-            (statement (statement_keyword) (comment) (argument (string)))))
-          (comment))))))))
+    module_block: (block
+      (statement
+        (statement_keyword)
+        (argument
+          (string)))
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier)))
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (string)))
+          (statement
+            (statement_keyword)
+            (argument
+              (string)))
+          (statement
+            (statement_keyword)
+            (argument
+              (string)))
+          (statement
+            (statement_keyword)
+            (argument
+              (string)))
+          (statement
+            (statement_keyword)
+            (argument
+              (string)))
+          (statement
+            (statement_keyword)
+            (argument
+              (string)))
+          (statement
+            (statement_keyword)
+            (argument
+              (string)))
+          (statement
+            (statement_keyword)
+            (argument
+              (string)))
+          (statement
+            (statement_keyword)
+            (argument
+              (string_concatenation
+                (string)
+                (plus_symbol)
+                (string)
+                (plus_symbol)
+                (string)
+                (plus_symbol)
+                (string)
+                (plus_symbol)
+                (string)))))))))
 
-==========================
-Module with extension call
-==========================
+================================================================================
+Large module to test the entire grammar
+================================================================================
 
 module my-module-name {
+    yang-version "1.1";
+    namespace "https://foo.bar.com/my-module-name";
+    prefix mymod;
+
+    // Comment!
+    import ietf-inet-types {
+        prefix inet;
+    }
+
+    organization "Foo";
+    contact "Foo post <post@foo.com>";
+
+    description
+        "I am a very long, multi-line string.
+
+         This is entirely valid syntax and is a very common way to provide
+         string arguments to description statements.
+
+         It doesn't matter how long it is or how many paragraphs it contains,
+         and it should even be able to contain escaped quotes like \"this\".
+
+         It usually ends like this.";
+
+    revision 2019-11-16 {
+        description
+            "This description starts on the next line!";
+        reference
+            "So does this reference statement!";
+    }
+
+    identity my-identity {
+        description "This is a YANG identity.";
+        reference "Foobar!";
+    }
+
     augment /ncs:devices/device {
         container new-container {
             tailf:action add-device {
                 tailf:actionpoint my-module-name-add-device;
-                tailf:info
+                tailf:info // A comment between a keyword and its argument!
                     "Add a device!";
                 input {
                     uses inventory-actions:device-input;
@@ -217,25 +280,155 @@ module my-module-name {
                         description "Action result.";
                     }
                 }
+                /* This entire block is commented out and should only produce a
+                   comment node in the syntax tree
+                output {
+                    leaf result {
+                        type string;
+                        description "Action result.";
+                    }
+                }
+                */
             }
+        }
+    }
+
+    container various-strings {
+        must "boolean(/foo/bar) = false "
+           + "&& boolean(/bar/baz) = false" {
+            error-message 'Oh no!';
         }
     }
 }
 
----
+--------------------------------------------------------------------------------
 
 (yang
   (module
-    module_name: (identifier)
-    module_block: (block
-      (statement (statement_keyword) (argument (keypath)) (block
-        (statement (statement_keyword) (argument (node_identifier)) (block
-          (statement (extension_keyword) (argument (node_identifier)) (block
-            (statement (extension_keyword) (argument (node_identifier)))
-            (statement (extension_keyword) (argument (string)))
-            (statement (statement_keyword) (block
-              (statement (statement_keyword) (argument (node_identifier)))))
-            (statement (statement_keyword) (block
-              (statement (statement_keyword) (argument (node_identifier)) (block
-                (statement (statement_keyword) (argument (built_in_type)))
-                (statement (statement_keyword) (argument (string))))))))))))))))
+    (identifier)
+    (block
+      (statement
+        (statement_keyword)
+        (argument
+          (string)))
+      (statement
+        (statement_keyword)
+        (argument
+          (string)))
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier)))
+      (comment)
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier)))))
+      (statement
+        (statement_keyword)
+        (argument
+          (string)))
+      (statement
+        (statement_keyword)
+        (argument
+          (string)))
+      (statement
+        (statement_keyword)
+        (argument
+          (string)))
+      (statement
+        (statement_keyword)
+        (argument
+          (date))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (string)))
+          (statement
+            (statement_keyword)
+            (argument
+              (string)))))
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (string)))
+          (statement
+            (statement_keyword)
+            (argument
+              (string)))))
+      (statement
+        (statement_keyword)
+        (argument
+          (keypath))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier))
+            (block
+              (statement
+                (extension_keyword)
+                (argument
+                  (node_identifier))
+                (block
+                  (statement
+                    (extension_keyword)
+                    (argument
+                      (node_identifier)))
+                  (statement
+                    (extension_keyword)
+                    (comment)
+                    (argument
+                      (string)))
+                  (statement
+                    (statement_keyword)
+                    (block
+                      (statement
+                        (statement_keyword)
+                        (argument
+                          (node_identifier)))))
+                  (statement
+                    (statement_keyword)
+                    (block
+                      (statement
+                        (statement_keyword)
+                        (argument
+                          (node_identifier))
+                        (block
+                          (statement
+                            (statement_keyword)
+                            (argument
+                              (built_in_type)))
+                          (statement
+                            (statement_keyword)
+                            (argument
+                              (string)))))))
+                  (comment)))))))
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (string_concatenation
+                (string)
+                (plus_symbol)
+                (string)))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (string))))))))))

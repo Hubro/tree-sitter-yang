@@ -15,7 +15,7 @@ const yang_grammar = grammar({
     name: "yang",
 
     extras: $ => [
-        /\s+/,
+        /\s/,
         $.comment,
     ],
 
@@ -54,13 +54,13 @@ const yang_grammar = grammar({
             // - Just a block
             choice(
                 // An argument
-                seq($.argument, ';'),
+                seq($._sep, $.argument, ';'),
 
                 // An argument and a block
-                seq($.argument, $.block),
+                seq($._sep, $.argument, $.block),
 
                 // Just a block
-                $.block
+                seq(optional($._sep), $.block),
             )
         ),
 
@@ -74,6 +74,7 @@ const yang_grammar = grammar({
             $.built_in_type,
             $.node_identifier,
             $.string,
+            $.string_concatenation,
             $.date,
             $.keypath
         ),
@@ -82,11 +83,52 @@ const yang_grammar = grammar({
 
         node_identifier: $ => node_identifier,
 
-        string: $ => seq(
-            '"',
-            /[^"]*/,
-            '"',
+        // Copied from "tree-sitter-javascript":
+        //
+        // Slightly modified to hide the string fragments from the syntax tree.
+        //
+        // https://github.com/tree-sitter/tree-sitter-javascript/blob/2c5b138ea488259dbf11a34595042eb261965259/grammar.js#L865
+        //
+        string: $ => choice(
+            seq(
+                '"',
+                repeat(choice(
+                    $._unescaped_double_string_fragment,
+                    $._escape_sequence,
+                )),
+                '"'
+            ),
+            seq(
+                "'",
+                repeat(choice(
+                    $._unescaped_single_string_fragment,
+                    $._escape_sequence,
+                )),
+                "'"
+            )
         ),
+
+        string_concatenation: $ => seq(
+            repeat1(seq($.string, alias('+', $.plus_symbol))),
+            $.string
+        ),
+
+        _unescaped_double_string_fragment: $ =>
+            token.immediate(prec(1, /[^"\\]+/)),
+
+        _unescaped_single_string_fragment: $ =>
+            token.immediate(prec(1, /[^'\\]+/)),
+
+        _escape_sequence: $ => token.immediate(seq(
+            '\\',
+            choice(
+                /[^xu0-7]/,
+                /[0-7]{1,3}/,
+                /x[0-9a-fA-F]{2}/,
+                /u[0-9a-fA-F]{4}/,
+                /u{[0-9a-fA-F]+}/
+            )
+        )),
 
         date: $ => /\d{4}-\d{2}-\d{2}/,
 
@@ -113,6 +155,8 @@ const yang_grammar = grammar({
         /*
          * Misc
          */
+
+        _sep: $ => /\s/,
 
         built_in_type: $ => choice(
             'binary',
@@ -209,4 +253,4 @@ const yang_grammar = grammar({
     },
 });
 
-module.exports = yang_grammar
+module.exports = yang_grammar;

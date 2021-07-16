@@ -1,5 +1,6 @@
 # Build output
-/src
+/src/
+/build/
 /node_modules/
 /Cargo.toml
 /binding.gyp

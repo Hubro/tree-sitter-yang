@@ -39,20 +39,38 @@ const yang_grammar = grammar({
 
         block: $ => seq(
             '{',
-            repeat($.statement),
+            repeat(choice($.statement, $.extension_statement)),
             '}',
         ),
 
         statement: $ => seq(
-            choice(
-                $.statement_keyword,
-                $.extension_keyword,
-            ),
+            $.statement_keyword,
+
             // A statement can either have
             // - An argument
             // - An argument and a block
             // - Just a block
             choice(
+                // An argument
+                seq($._sep, $.argument, ';'),
+
+                // An argument and a block
+                seq($._sep, $.argument, $.block),
+
+                // Just a block
+                seq(optional($._sep), $.block),
+            )
+        ),
+
+        extension_statement: $ => seq(
+            $.extension_keyword,
+
+            // Extension statements have the same possible values as a regular
+            // statement, but can also be used with no value
+            choice(
+                // No arguments
+                ';',
+
                 // An argument
                 seq($._sep, $.argument, ';'),
 
@@ -73,15 +91,19 @@ const yang_grammar = grammar({
         argument: $ => choice(
             $.built_in_type,
             $.node_identifier,
+            $.integer,
             $.string,
             $.string_concatenation,
             $.date,
-            $.keypath
+            $.keypath,
+            $.yang_version,
         ),
 
         identifier: $ => identifier,
 
         node_identifier: $ => node_identifier,
+
+        integer: $ => /\d+/,
 
         // Copied from "tree-sitter-javascript":
         //
@@ -137,6 +159,11 @@ const yang_grammar = grammar({
                 absolute_keypath(),
                 relative_keypath(),
             )
+        ),
+
+        // Currently, "yang-version" can only be set to 1.1
+        yang_version: $ => choice(
+            '1.1',
         ),
 
         // Copied from "tree-sitter-javascript":

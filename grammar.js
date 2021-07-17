@@ -95,15 +95,20 @@ const yang_grammar = grammar({
             $.string,
             $.string_concatenation,
             $.date,
+            $.range,
             $.keypath,
             $.yang_version,
+            $.glob,
         ),
 
         identifier: $ => identifier,
 
         node_identifier: $ => node_identifier,
 
-        integer: $ => /\d+/,
+        integer: $ => choice(
+            /-?\d+/,
+            /-?0[xX][a-zA-Z0-9]+/
+        ),
 
         // Copied from "tree-sitter-javascript":
         //
@@ -154,6 +159,14 @@ const yang_grammar = grammar({
 
         date: $ => /\d{4}-\d{2}-\d{2}/,
 
+        range: $ => choice(
+            $.unquoted_range,
+            $.quoted_range,
+        ),
+
+        unquoted_range: $ => /\d+\.\.\d+/,
+        quoted_range: $ => /"\d+\.\.\d+"/,
+
         keypath: $ => token(
             choice(
                 absolute_keypath(),
@@ -161,10 +174,15 @@ const yang_grammar = grammar({
             )
         ),
 
-        // Currently, "yang-version" can only be set to 1.1
+        // Currently, "yang-version" can only be 1.1
         yang_version: $ => choice(
             '1.1',
         ),
+
+        // Confusingly, several of the IETF RFC YANG modules use glob values in
+        // enums, even though the YANG language RFC doesn't mention that this is
+        // possible.
+        glob: $ => '*',
 
         // Copied from "tree-sitter-javascript":
         //

@@ -91,15 +91,42 @@ module my-module-name {
               (comment))))))))
 
 ================================================================================
-Integer
+Numbers
 ================================================================================
 
 module my-module-name {
-    container foo {
-        leaf bar {
-            type uint32;
-            default 100;
-         }
+    container regular {
+        leaf positive {
+           type uint32;
+           default 100;
+        }
+
+        leaf zero {
+           type uint32;
+           default 0;
+        }
+
+        leaf negative {
+           type uint32;
+           default -5;
+        }
+    }
+
+    container hex {
+        leaf positive {
+           type uint32;
+           default 0xff;
+        }
+
+        leaf zero {
+           type uint32;
+           default 0x0;
+        }
+
+        leaf negative {
+           type uint32;
+           default -0XFF0123456;
+        }
     }
 }
 
@@ -107,8 +134,8 @@ module my-module-name {
 
 (yang
   (module
-    module_name: (identifier)
-    module_block: (block
+    (identifier)
+    (block
       (statement
         (statement_keyword)
         (argument
@@ -126,7 +153,169 @@ module my-module-name {
               (statement
                 (statement_keyword)
                 (argument
+                  (integer)))))
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (built_in_type)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (integer)))))
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (built_in_type)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (integer)))))))
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (built_in_type)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (integer)))))
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (built_in_type)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (integer)))))
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (built_in_type)))
+              (statement
+                (statement_keyword)
+                (argument
                   (integer))))))))))
+
+================================================================================
+Enumerations
+================================================================================
+
+module my-module-name {
+    typedef foo {
+        // Apparently enums can have a glob value, even though it's not
+        // mentioned in the RFC or the ABNF spec.
+        type enumeration {
+            enum *;
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(yang
+  (module
+    module_name: (identifier)
+    module_block: (block
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (comment)
+          (comment)
+          (statement
+            (statement_keyword)
+            (argument
+              (built_in_type))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (glob))))))))))
+
+================================================================================
+Range values
+================================================================================
+
+module my-module-name {
+    typedef foo {
+        type string {
+            length "3..64";
+        }
+    }
+
+    typedef bar {
+        type uint32 {
+            range 0..100;
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(yang
+  (module
+    (identifier)
+    (block
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (built_in_type))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (quoted_range))))))))
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (built_in_type))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (unquoted_range)))))))))))
 
 ================================================================================
 Module with augment statement
@@ -304,7 +493,7 @@ module my-string-testing-module {
                 (string)))))))))
 
 ================================================================================
-Large module to test the entire grammar
+Lots of diverse grammar used together
 ================================================================================
 
 module my-module-name {

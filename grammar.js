@@ -20,8 +20,8 @@ const yang_grammar = grammar({
     ],
 
     conflicts: $ => [
-        [$.string, $.range],
-        [$.unquoted_string, $.range, $.date],
+        [$.string, $.quoted_range],
+        [$.unquoted_string, $.unquoted_range, $.date],
     ],
 
     rules: {
@@ -98,7 +98,7 @@ const yang_grammar = grammar({
             $.node_identifier,
             $.integer,
             $.string,
-            $.unquoted_string,
+            // $.unquoted_string,
             $.string_concatenation,
             $.date,
             $.range,
@@ -122,7 +122,7 @@ const yang_grammar = grammar({
         //
         // https://github.com/tree-sitter/tree-sitter-javascript/blob/2c5b138ea488259dbf11a34595042eb261965259/grammar.js#L865
         //
-        string: $ => choice(
+        string: $ => prec.dynamic(-1, choice(
             seq(
                 '"',
                 repeat(choice(
@@ -139,7 +139,7 @@ const yang_grammar = grammar({
                 )),
                 "'"
             )
-        ),
+        )),
 
         // Unquoted strings are not explained in the ABNF grammar, so we're
         // going to assume it can be any identifier character plus a few more

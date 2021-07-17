@@ -1,5 +1,5 @@
 ================================================================================
-Empty module
+Can parse an empty module
 ================================================================================
 
 module my-module-name {
@@ -13,7 +13,79 @@ module my-module-name {
     module_block: (block)))
 
 ================================================================================
-YANG version
+Can parse an empty submodule
+================================================================================
+
+submodule my-module-name {
+}
+
+--------------------------------------------------------------------------------
+
+(yang
+  (submodule
+    submodule_name: (identifier)
+    submodule_block: (block)))
+
+================================================================================
+Can parse a module with statements
+================================================================================
+
+submodule my-module-name {
+    yang-version 1.1;
+    namespace "https://foo.bar.com/my-module-name";
+    prefix mymod;
+}
+
+--------------------------------------------------------------------------------
+
+(yang
+  (submodule
+    submodule_name: (identifier)
+    submodule_block: (block
+      (statement
+        (statement_keyword)
+        (argument
+          (yang_version)))
+      (statement
+        (statement_keyword)
+        (argument
+          (string)))
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))))))
+
+================================================================================
+Can parse a submodule with statements
+================================================================================
+
+submodule my-module-name {
+    yang-version 1.1;
+    namespace "https://foo.bar.com/my-module-name";
+    prefix mymod;
+}
+
+--------------------------------------------------------------------------------
+
+(yang
+  (submodule
+    submodule_name: (identifier)
+    submodule_block: (block
+      (statement
+        (statement_keyword)
+        (argument
+          (yang_version)))
+      (statement
+        (statement_keyword)
+        (argument
+          (string)))
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))))))
+
+================================================================================
+Can parse YANG-version arguments
 ================================================================================
 
 module my-module-name {
@@ -32,66 +104,7 @@ module my-module-name {
           (yang_version))))))
 
 ================================================================================
-Submodule with yang-version
-================================================================================
-
-submodule my-module-name {
-    yang-version 1.1;
-}
-
---------------------------------------------------------------------------------
-
-(yang
-  (submodule
-    submodule_name: (identifier)
-    submodule_block: (block
-      (statement
-        (statement_keyword)
-        (argument
-          (yang_version))))))
-
-================================================================================
-Extension statements
-================================================================================
-
-module my-module-name {
-    container foo {
-        my-extension:foo "called with an argument";
-
-        custom-extensions:can-be-used-without-argument;
-
-        tailf:action foobar {
-            // With a block
-        }
-    }
-}
-
---------------------------------------------------------------------------------
-
-(yang
-  (module
-    (identifier)
-    (block
-      (statement
-        (statement_keyword)
-        (argument
-          (node_identifier))
-        (block
-          (extension_statement
-            (extension_keyword)
-            (argument
-              (string)))
-          (extension_statement
-            (extension_keyword))
-          (extension_statement
-            (extension_keyword)
-            (argument
-              (node_identifier))
-            (block
-              (comment))))))))
-
-================================================================================
-Numbers
+Can parse regular numbers
 ================================================================================
 
 module my-module-name {
@@ -111,7 +124,64 @@ module my-module-name {
            default -5;
         }
     }
+}
 
+--------------------------------------------------------------------------------
+
+(yang
+  (module
+    (identifier)
+    (block
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (built_in_type)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (integer)))))
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (built_in_type)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (integer)))))
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (built_in_type)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (integer))))))))))
+
+================================================================================
+Can parse hex numbers
+================================================================================
+
+module my-module-name {
     container hex {
         leaf positive {
            type uint32;
@@ -179,7 +249,28 @@ module my-module-name {
               (statement
                 (statement_keyword)
                 (argument
-                  (integer)))))))
+                  (integer))))))))))
+
+================================================================================
+Can parse simple strings
+================================================================================
+
+module my-string-testing-module {
+    container lets-test-some-strings {
+        description "Regular, boring, double quoted string";
+        description 'Single tick stings!';
+
+        description "Can contain \"escaped\" double quotes";
+        description 'Can contain \'escaped\' single quotes';
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(yang
+  (module
+    (identifier)
+    (block
       (statement
         (statement_keyword)
         (argument
@@ -188,53 +279,137 @@ module my-module-name {
           (statement
             (statement_keyword)
             (argument
-              (node_identifier))
-            (block
-              (statement
-                (statement_keyword)
-                (argument
-                  (built_in_type)))
-              (statement
-                (statement_keyword)
-                (argument
-                  (integer)))))
+              (string)))
           (statement
             (statement_keyword)
             (argument
-              (node_identifier))
-            (block
-              (statement
-                (statement_keyword)
-                (argument
-                  (built_in_type)))
-              (statement
-                (statement_keyword)
-                (argument
-                  (integer)))))
+              (string)))
           (statement
             (statement_keyword)
             (argument
-              (node_identifier))
-            (block
-              (statement
-                (statement_keyword)
-                (argument
-                  (built_in_type)))
-              (statement
-                (statement_keyword)
-                (argument
-                  (integer))))))))))
+              (string)))
+          (statement
+            (statement_keyword)
+            (argument
+              (string))))))))
 
 ================================================================================
-Enumerations
+Can parse multi-line strings
 ================================================================================
 
-module my-module-name {
-    typedef foo {
-        // Apparently enums can have a glob value, even though it's not
-        // mentioned in the RFC or the ABNF spec.
-        type enumeration {
-            enum *;
+module my-string-testing-module {
+    container lets-test-some-strings {
+        description "Multi-line, multi paragraph string.
+
+                     More here,
+
+                     Even more here.";
+
+        description 'Multi-line, multi paragraph string.
+
+                     More here,
+
+                     Even more here.';
+
+        description
+          "Multi-line, multi paragraph string, starting on the next line.
+
+           More here,
+
+           Even more here.";
+
+        description
+          'Multi-line, multi paragraph string.
+
+           More here,
+
+           Even more here.';
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(yang
+  (module
+    (identifier)
+    (block
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (string)))
+          (statement
+            (statement_keyword)
+            (argument
+              (string)))
+          (statement
+            (statement_keyword)
+            (argument
+              (string)))
+          (statement
+            (statement_keyword)
+            (argument
+              (string))))))))
+
+================================================================================
+Can parse string concatenations
+================================================================================
+
+module my-string-testing-module {
+    container lets-test-some-strings {
+        description "String split "
+                  + "over multiple lines "
+                  + "is also normal. "
+                  + 'Mixed tick strings is not really normal, but '
+                  + "is none the less syntactically valid.";
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(yang
+  (module
+    (identifier)
+    (block
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (string_concatenation
+                (string)
+                (plus_symbol)
+                (string)
+                (plus_symbol)
+                (string)
+                (plus_symbol)
+                (string)
+                (plus_symbol)
+                (string)))))))))
+
+================================================================================
+Can parse unquoted strings
+================================================================================
+
+module my-string-testing-module {
+    container unquoted-string-madness {
+        // YANG accepts almost (?) any string as arguments WITHOUT QUOTES, which
+        // is massively annoying
+        leaf some-time {
+            type time-interval;
+            default 00:00:15.0;
+        }
+
+        leaf some-thing {
+            type thing;
+            default 1.2.3.4;
         }
     }
 }
@@ -243,8 +418,8 @@ module my-module-name {
 
 (yang
   (module
-    module_name: (identifier)
-    module_block: (block
+    (identifier)
+    (block
       (statement
         (statement_keyword)
         (argument
@@ -255,15 +430,32 @@ module my-module-name {
           (statement
             (statement_keyword)
             (argument
-              (built_in_type))
+              (node_identifier))
             (block
               (statement
                 (statement_keyword)
                 (argument
-                  (glob))))))))))
+                  (node_identifier)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (unquoted_string)))))
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (node_identifier)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (unquoted_string))))))))))
 
 ================================================================================
-Range values
+Can parse range arguments
 ================================================================================
 
 module my-module-name {
@@ -318,20 +510,15 @@ module my-module-name {
                     (unquoted_range)))))))))))
 
 ================================================================================
-Module with augment statement
+Can parse enumerations
 ================================================================================
 
 module my-module-name {
-    yang-version 1.1;
-    namespace "https://foo.bar.com/my-module-name";
-    prefix mymod;
-
-    augment /ncs:devices/device {
-        container foo {
-            leaf bar {
-                type string;
-                description "Foo bar.";
-            }
+    typedef foo {
+        // Apparently enums can have a glob value, even though it's not
+        // mentioned in the RFC or the ABNF spec.
+        type enumeration {
+            enum *;
         }
     }
 }
@@ -345,98 +532,32 @@ module my-module-name {
       (statement
         (statement_keyword)
         (argument
-          (yang_version)))
-      (statement
-        (statement_keyword)
-        (argument
-          (string)))
-      (statement
-        (statement_keyword)
-        (argument
-          (node_identifier)))
-      (statement
-        (statement_keyword)
-        (argument
-          (keypath))
+          (node_identifier))
         (block
+          (comment)
+          (comment)
           (statement
             (statement_keyword)
             (argument
-              (node_identifier))
+              (built_in_type))
             (block
               (statement
                 (statement_keyword)
                 (argument
-                  (node_identifier))
-                (block
-                  (statement
-                    (statement_keyword)
-                    (argument
-                      (built_in_type)))
-                  (statement
-                    (statement_keyword)
-                    (argument
-                      (string))))))))))))
+                  (glob))))))))))
 
 ================================================================================
-All permutations of string usage
+Can parse extension statements
 ================================================================================
 
-module my-string-testing-module {
-    namespace "https://foo.bar.com/my-string-testing-module";
-    prefix string-test;
+module my-module-name {
+    container foo {
+        my-extension:foo "called with an argument";
 
-    container lets-test-some-strings {
-        description "Regular, boring, double quoted string";
-        description 'Single tick stings!';
+        custom-extensions:can-be-used-without-argument;
 
-        description "Can contain \"escaped\" double quotes";
-        description 'Can contain \'escaped\' single quotes';
-
-        description "Multi-line, multi paragraph string.
-
-                     More here,
-
-                     Even more here.";
-
-        description 'Multi-line, multi paragraph string.
-
-                     More here,
-
-                     Even more here.';
-
-        description
-          "Multi-line, multi paragraph string, starting on the next line.
-
-           More here,
-
-           Even more here.";
-
-        description
-          'Multi-line, multi paragraph string.
-
-           More here,
-
-           Even more here.';
-
-        description "String split "
-                  + "over multiple lines "
-                  + "is also normal. "
-                  + 'Mixed tick strings is not really normal, but '
-                  + "is none the less syntactically valid.";
-    }
-
-    container unquoted-string-madness {
-        // YANG accepts almost (?) any string as arguments WITHOUT QUOTES, which
-        // is massively annoying
-        leaf some-time {
-            type time-interval;
-            default 00:00:15.0;
-        }
-
-        leaf some-thing {
-            type thing;
-            default 1.2.3.4;
+        tailf:action foobar {
+            // With a block
         }
     }
 }
@@ -445,99 +566,25 @@ module my-string-testing-module {
 
 (yang
   (module
-    module_name: (identifier)
-    module_block: (block
-      (statement
-        (statement_keyword)
-        (argument
-          (string)))
-      (statement
-        (statement_keyword)
-        (argument
-          (node_identifier)))
+    (identifier)
+    (block
       (statement
         (statement_keyword)
         (argument
           (node_identifier))
         (block
-          (statement
-            (statement_keyword)
+          (extension_statement
+            (extension_keyword)
             (argument
               (string)))
-          (statement
-            (statement_keyword)
-            (argument
-              (string)))
-          (statement
-            (statement_keyword)
-            (argument
-              (string)))
-          (statement
-            (statement_keyword)
-            (argument
-              (string)))
-          (statement
-            (statement_keyword)
-            (argument
-              (string)))
-          (statement
-            (statement_keyword)
-            (argument
-              (string)))
-          (statement
-            (statement_keyword)
-            (argument
-              (string)))
-          (statement
-            (statement_keyword)
-            (argument
-              (string)))
-          (statement
-            (statement_keyword)
-            (argument
-              (string_concatenation
-                (string)
-                (plus_symbol)
-                (string)
-                (plus_symbol)
-                (string)
-                (plus_symbol)
-                (string)
-                (plus_symbol)
-                (string))))))
-      (statement
-        (statement_keyword)
-        (argument
-          (node_identifier))
-        (block
-          (comment)
-          (comment)
-          (statement
-            (statement_keyword)
+          (extension_statement
+            (extension_keyword))
+          (extension_statement
+            (extension_keyword)
             (argument
               (node_identifier))
             (block
-              (statement
-                (statement_keyword)
-                (argument
-                  (node_identifier)))
-              (statement
-                (statement_keyword)
-                (argument
-                  (unquoted_string)))))
-          (statement
-            (statement_keyword)
-            (argument
-              (node_identifier))
-            (block
-              (statement
-                (statement_keyword)
-                (argument
-                  (node_identifier)))
-              (statement
-                (statement_keyword)
-                (argument
-                  (unquoted_string))))))))))
+              (comment))))))))
 
 ================================================================================
 Lots of diverse grammar used together

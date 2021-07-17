@@ -425,6 +425,20 @@ module my-string-testing-module {
                   + 'Mixed tick strings is not really normal, but '
                   + "is none the less syntactically valid.";
     }
+
+    container unquoted-string-madness {
+        // YANG accepts almost (?) any string as arguments WITHOUT QUOTES, which
+        // is massively annoying
+        leaf some-time {
+            type time-interval;
+            default 00:00:15.0;
+        }
+
+        leaf some-thing {
+            type thing;
+            default 1.2.3.4;
+        }
+    }
 }
 
 --------------------------------------------------------------------------------
@@ -490,7 +504,40 @@ module my-string-testing-module {
                 (plus_symbol)
                 (string)
                 (plus_symbol)
-                (string)))))))))
+                (string))))))
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (comment)
+          (comment)
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (node_identifier)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (unquoted_string)))))
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (node_identifier)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (unquoted_string))))))))))
 
 ================================================================================
 Lots of diverse grammar used together

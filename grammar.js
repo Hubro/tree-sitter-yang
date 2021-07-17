@@ -19,6 +19,11 @@ const yang_grammar = grammar({
         $.comment,
     ],
 
+    conflicts: $ => [
+        [$.string, $.range],
+        [$.unquoted_string, $.range, $.date],
+    ],
+
     rules: {
         yang: $ => choice(
             $.module,
@@ -93,6 +98,7 @@ const yang_grammar = grammar({
             $.node_identifier,
             $.integer,
             $.string,
+            $.unquoted_string,
             $.string_concatenation,
             $.date,
             $.range,
@@ -134,6 +140,11 @@ const yang_grammar = grammar({
                 "'"
             )
         ),
+
+        // Unquoted strings are not explained in the ABNF grammar, so we're
+        // going to assume it can be any identifier character plus a few more
+        // common symbols.
+        unquoted_string: $ => prec.dynamic(-1, /[a-zA-Z0-9-_:.]+/),
 
         string_concatenation: $ => seq(
             repeat1(seq($.string, alias('+', $.plus_symbol))),

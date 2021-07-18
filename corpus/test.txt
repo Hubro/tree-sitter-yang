@@ -549,6 +549,7 @@ module my-string-testing-module {
         leaf some-thing {
             type thing;
             default 1.2.3.4;
+            must .=not(../some-time);
         }
     }
 
@@ -602,6 +603,10 @@ module my-string-testing-module {
                 (statement_keyword)
                 (argument
                   (node_identifier)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (unquoted_string)))
               (statement
                 (statement_keyword)
                 (argument
@@ -749,6 +754,8 @@ module my-module-name {
         // Should be parsed as an extension keyword, even though "config" is a
         // built-in keyword
         config:my-custom-stuff ArgumentHere;
+
+        description "Extension statements should:not be matched inside strings.";
     }
 }
 
@@ -780,7 +787,11 @@ module my-module-name {
           (extension_statement
             (extension_keyword)
             (argument
-              (node_identifier))))))))
+              (node_identifier)))
+          (statement
+            (statement_keyword)
+            (argument
+              (string))))))))
 
 ================================================================================
 Lots of diverse grammar used together

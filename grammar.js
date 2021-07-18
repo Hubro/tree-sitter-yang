@@ -187,10 +187,10 @@ module.exports = grammar({
             '1.1',
         ),
 
-        // Unquoted strings are not explained in the ABNF grammar, so we're
-        // going to assume it can be any identifier character plus a few more
-        // common symbols.
-        unquoted_string: $ => /[a-zA-Z0-9-_:.^/&]+/,
+        // Unquoted strings are not explained in the ABNF grammar, but going by
+        // all the examples in yang-modules, it seems like it can contain any
+        // symbol except for whitespace, semicolons, quotes and curly brackets.
+        unquoted_string: $ => /[^\s;"'{}]+/,
 
         // Confusingly, several of the IETF RFC YANG modules use glob values in
         // enums, even though the YANG language RFC doesn't mention that this is

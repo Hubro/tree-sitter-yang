@@ -85,6 +85,116 @@ submodule my-module-name {
           (node_identifier))))))
 
 ================================================================================
+Can parse multiple statements on one line
+================================================================================
+
+submodule my-module-name {
+    yang-version 1.1;
+    namespace "https://foo.bar.com/my-module-name";
+    prefix mymod;
+
+    import config { prefix config; revision-date 2013-04-05; }
+}
+
+--------------------------------------------------------------------------------
+
+(yang
+  (submodule
+    submodule_name: (identifier)
+    submodule_block: (block
+      (statement
+        (statement_keyword)
+        (argument
+          (yang_version)))
+      (statement
+        (statement_keyword)
+        (argument
+          (string)))
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier)))
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier)))
+          (statement
+            (statement_keyword)
+            (argument
+              (date))))))))
+
+================================================================================
+Can parse comments
+================================================================================
+
+// Comments are valid even outside the top level module
+module my-module-name {   // And on the same line
+    // And here
+    yang-version 1.1; // And here
+    namespace "https://foo.bar.com/my-module-name";
+    prefix mymod;
+
+    import config { prefix config; /* And even here */ revision-date 2013-04-05; }
+
+    /* And whole blocks can be commented out
+    container foo {
+        leaf bar {
+           type uint32;
+           default 100;
+        }
+    }
+    */
+
+    // TODO: This test currently fails!
+    // foo "A comment // inside a string is not parsed as a comment";
+}
+
+--------------------------------------------------------------------------------
+
+(yang
+  (comment)
+  (module
+    module_name: (identifier)
+    module_block: (block
+      (comment)
+      (comment)
+      (statement
+        (statement_keyword)
+        (argument
+          (yang_version)))
+      (comment)
+      (statement
+        (statement_keyword)
+        (argument
+          (string)))
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier)))
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier)))
+          (comment)
+          (statement
+            (statement_keyword)
+            (argument
+              (date)))))
+      (comment)
+      (comment)
+      (comment))))
+
+================================================================================
 Can parse YANG-version arguments
 ================================================================================
 
@@ -398,10 +508,11 @@ module my-string-testing-module {
 Can parse unquoted strings
 ================================================================================
 
+// The "unquoted string" argument is poorly documented in the YANG ABNF syntax,
+// so this test case contains a bunch of examples found in the
+// https://github.com/YangModels/yang repository.
 module my-string-testing-module {
     container unquoted-string-madness {
-        // YANG accepts almost (?) any string as arguments WITHOUT QUOTES, which
-        // is massively annoying
         leaf some-time {
             type time-interval;
             default 00:00:15.0;
@@ -412,11 +523,27 @@ module my-string-testing-module {
             default 1.2.3.4;
         }
     }
+
+    typedef acceleration {
+        type ieee1906-dot1-function:variable;
+        units meter/second^2;
+    }
+
+    typedef {
+        type enumeration {
+            enum FOO;
+            enum BAR;
+            enum FOO&BAR;
+        }
+    }
 }
 
 --------------------------------------------------------------------------------
 
 (yang
+  (comment)
+  (comment)
+  (comment)
   (module
     (identifier)
     (block
@@ -425,8 +552,6 @@ module my-string-testing-module {
         (argument
           (node_identifier))
         (block
-          (comment)
-          (comment)
           (statement
             (statement_keyword)
             (argument
@@ -445,6 +570,39 @@ module my-string-testing-module {
             (argument
               (node_identifier))
             (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (node_identifier)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (unquoted_string)))))))
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier)))
+          (statement
+            (statement_keyword)
+            (argument
+              (unquoted_string)))))
+      (statement
+        (statement_keyword)
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (built_in_type))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (node_identifier)))
               (statement
                 (statement_keyword)
                 (argument
@@ -559,6 +717,10 @@ module my-module-name {
         tailf:action foobar {
             // With a block
         }
+
+        // Should be parsed as an extension keyword, even though "config" is a
+        // built-in keyword
+        config:my-custom-stuff ArgumentHere;
     }
 }
 
@@ -584,7 +746,13 @@ module my-module-name {
             (argument
               (node_identifier))
             (block
-              (comment))))))))
+              (comment)))
+          (comment)
+          (comment)
+          (extension_statement
+            (extension_keyword)
+            (argument
+              (node_identifier))))))))
 
 ================================================================================
 Lots of diverse grammar used together

@@ -11,18 +11,13 @@ const prefix = () => seq(identifier, token.immediate(":"))
 const relative_keypath = () => seq(node_identifier, absolute_keypath());
 const absolute_keypath = () => repeat1(seq('/', node_identifier));
 
-const yang_grammar = grammar({
+module.exports = grammar({
     name: "yang",
 
     extras: $ => [
         /\s/,
         $.comment,
     ],
-
-    // conflicts: $ => [
-    //     [$.string, $.quoted_range],
-    //     [$.unquoted_string, $.unquoted_range, $.date],
-    // ],
 
     rules: {
         yang: $ => choice(
@@ -91,20 +86,27 @@ const yang_grammar = grammar({
         //
         //   tailf:actionpoint
         //
-        extension_keyword: $ => seq(prefix(), token.immediate(identifier)),
+        // An extension keyword may be prefixed by a statement keyword like
+        // "config". To prevent "config" from being parsed as a
+        // $.statement_keyword, this symbol is marked as a token with increased
+        // priority.
+        //
+        extension_keyword: $ => token(prec(10,
+            seq(prefix(), token.immediate(identifier))
+        )),
 
         argument: $ => choice(
             $.built_in_type,
             $.node_identifier,
             $.integer,
             $.string,
-            $.unquoted_string,
             $.string_concatenation,
             $.date,
             $.range,
             $.keypath,
             $.yang_version,
             $.glob,
+            $.unquoted_string,
         ),
 
         identifier: $ => identifier,
@@ -140,11 +142,6 @@ const yang_grammar = grammar({
                 "'"
             )
         ),
-
-        // Unquoted strings are not explained in the ABNF grammar, so we're
-        // going to assume it can be any identifier character plus a few more
-        // common symbols.
-        unquoted_string: $ => /[a-zA-Z0-9-_:.]+/,
 
         string_concatenation: $ => seq(
             repeat1(seq($.string, alias('+', $.plus_symbol))),
@@ -190,6 +187,11 @@ const yang_grammar = grammar({
             '1.1',
         ),
 
+        // Unquoted strings are not explained in the ABNF grammar, so we're
+        // going to assume it can be any identifier character plus a few more
+        // common symbols.
+        unquoted_string: $ => /[a-zA-Z0-9-_:.^/&]+/,
+
         // Confusingly, several of the IETF RFC YANG modules use glob values in
         // enums, even though the YANG language RFC doesn't mention that this is
         // possible.
@@ -200,7 +202,7 @@ const yang_grammar = grammar({
         // https://github.com/tree-sitter/tree-sitter-javascript/blob/2c5b138ea488259dbf11a34595042eb261965259/grammar.js#L907
         //
         comment: $ => token(choice(
-            seq('//', /.*/),
+            seq('//', /(\\(.|\r?\n)|[^\\\n])*/),
             seq(
                 '/*',
                 /[^*]*\*+([^/*][^*]*\*+)*/,
@@ -308,5 +310,3 @@ const yang_grammar = grammar({
         )
     },
 });
-
-module.exports = yang_grammar;

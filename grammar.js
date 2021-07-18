@@ -27,13 +27,13 @@ module.exports = grammar({
 
         module: $ => seq(
             'module',
-            field('module_name', $.identifier),
+            field('module_name', choice($.identifier, $.string)),
             field('module_block', $.block),
         ),
 
         submodule: $ => seq(
             'submodule',
-            field('submodule_name', $.identifier),
+            field('submodule_name', choice($.identifier, $.string)),
             field('submodule_block', $.block),
         ),
 

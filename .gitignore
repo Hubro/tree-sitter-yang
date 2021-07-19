@@ -1,5 +1,4 @@
 # Build output
-/src/
 /build/
 /node_modules/
 /Cargo.toml

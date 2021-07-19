@@ -99,6 +99,7 @@ module.exports = grammar({
             $.built_in_type,
             $.node_identifier,
             $.integer,
+            $.boolean,
             $.string,
             $.string_concatenation,
             $.date,
@@ -117,6 +118,8 @@ module.exports = grammar({
             /-?\d+/,
             /-?0[xX][a-zA-Z0-9]+/
         ),
+
+        boolean: $ => choice("true", "false"),
 
         // Copied from "tree-sitter-javascript":
         //

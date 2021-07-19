@@ -390,6 +390,62 @@ module my-module-name {
                   (integer))))))))))
 
 ================================================================================
+Can parse booleans
+================================================================================
+
+module my-module-name {
+    container boolean-test {
+        leaf foo {
+           type string;
+           mandatory true;
+        }
+
+        leaf bar {
+           type string;
+           mandatory false;
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(yang
+  (module
+    (identifier)
+    (block
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (built_in_type)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (boolean)))))
+          (statement
+            (statement_keyword)
+            (argument
+              (node_identifier))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (built_in_type)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (boolean))))))))))
+
+================================================================================
 Can parse simple strings
 ================================================================================
 

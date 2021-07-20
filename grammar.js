@@ -131,8 +131,11 @@ module.exports = grammar({
             seq(
                 '"',
                 repeat(choice(
-                    $._unescaped_double_string_fragment,
-                    $._escape_sequence,
+                    alias(
+                        $._unescaped_double_string_fragment,
+                        $.string_fragment
+                    ),
+                    alias($._escape_sequence, $.escape_sequence),
                 )),
                 '"'
             ),
@@ -140,6 +143,8 @@ module.exports = grammar({
                 "'",
                 repeat(choice(
                     $._unescaped_single_string_fragment,
+
+                    // Escape sequences should be hidden in single tick strings
                     $._escape_sequence,
                 )),
                 "'"

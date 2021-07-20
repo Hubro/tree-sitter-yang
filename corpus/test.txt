@@ -23,7 +23,8 @@ module "my-module-name" {
 
 (yang
   (module
-    module_name: (string)
+    module_name: (string
+      (string_fragment))
     module_block: (block)))
 
 ================================================================================
@@ -51,7 +52,8 @@ submodule "my-module-name" {
 
 (yang
   (submodule
-    submodule_name: (string)
+    submodule_name: (string
+      (string_fragment))
     submodule_block: (block)))
 
 ================================================================================
@@ -77,7 +79,8 @@ submodule my-module-name {
       (statement
         (statement_keyword)
         (argument
-          (string)))
+          (string
+            (string_fragment))))
       (statement
         (statement_keyword)
         (argument
@@ -106,7 +109,8 @@ submodule my-module-name {
       (statement
         (statement_keyword)
         (argument
-          (string)))
+          (string
+            (string_fragment))))
       (statement
         (statement_keyword)
         (argument
@@ -137,7 +141,8 @@ submodule my-module-name {
       (statement
         (statement_keyword)
         (argument
-          (string)))
+          (string
+            (string_fragment))))
       (statement
         (statement_keyword)
         (argument
@@ -199,7 +204,8 @@ module my-module-name {   // And on the same line
       (statement
         (statement_keyword)
         (argument
-          (string)))
+          (string
+            (string_fragment))))
       (statement
         (statement_keyword)
         (argument
@@ -473,7 +479,8 @@ module my-string-testing-module {
           (statement
             (statement_keyword)
             (argument
-              (string)))
+              (string
+                (string_fragment))))
           (statement
             (statement_keyword)
             (argument
@@ -481,7 +488,47 @@ module my-string-testing-module {
           (statement
             (statement_keyword)
             (argument
-              (string)))
+              (string
+                (string_fragment)
+                (escape_sequence)
+                (string_fragment)
+                (escape_sequence)
+                (string_fragment))))
+          (statement
+            (statement_keyword)
+            (argument
+              (string))))))))
+
+================================================================================
+Can parse strings with escape sequences
+================================================================================
+
+module my-string-testing-module {
+    container lets-test-some-strings {
+        description "Can contain escape sequences like \n and \r";
+        description 'Can\'t contain any escape sequences like \n and \r';
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(yang
+  (module
+    (identifier)
+    (block
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (string
+                (string_fragment)
+                (escape_sequence)
+                (string_fragment)
+                (escape_sequence))))
           (statement
             (statement_keyword)
             (argument
@@ -535,7 +582,8 @@ module my-string-testing-module {
           (statement
             (statement_keyword)
             (argument
-              (string)))
+              (string
+                (string_fragment))))
           (statement
             (statement_keyword)
             (argument
@@ -543,7 +591,8 @@ module my-string-testing-module {
           (statement
             (statement_keyword)
             (argument
-              (string)))
+              (string
+                (string_fragment))))
           (statement
             (statement_keyword)
             (argument
@@ -578,15 +627,19 @@ module my-string-testing-module {
             (statement_keyword)
             (argument
               (string_concatenation
-                (string)
+                (string
+                  (string_fragment))
+                (plus_symbol)
+                (string
+                  (string_fragment))
+                (plus_symbol)
+                (string
+                  (string_fragment))
                 (plus_symbol)
                 (string)
                 (plus_symbol)
-                (string)
-                (plus_symbol)
-                (string)
-                (plus_symbol)
-                (string)))))))))
+                (string
+                  (string_fragment))))))))))
 
 ================================================================================
 Can parse unquoted strings
@@ -829,7 +882,8 @@ module my-module-name {
           (extension_statement
             (extension_keyword)
             (argument
-              (string)))
+              (string
+                (string_fragment))))
           (extension_statement
             (extension_keyword))
           (extension_statement
@@ -847,7 +901,8 @@ module my-module-name {
           (statement
             (statement_keyword)
             (argument
-              (string))))))))
+              (string
+                (string_fragment)))))))))
 
 ================================================================================
 Lots of diverse grammar used together
@@ -938,7 +993,8 @@ module my-module-name {
       (statement
         (statement_keyword)
         (argument
-          (string)))
+          (string
+            (string_fragment))))
       (statement
         (statement_keyword)
         (argument
@@ -956,15 +1012,22 @@ module my-module-name {
       (statement
         (statement_keyword)
         (argument
-          (string)))
+          (string
+            (string_fragment))))
       (statement
         (statement_keyword)
         (argument
-          (string)))
+          (string
+            (string_fragment))))
       (statement
         (statement_keyword)
         (argument
-          (string)))
+          (string
+            (string_fragment)
+            (escape_sequence)
+            (string_fragment)
+            (escape_sequence)
+            (string_fragment))))
       (statement
         (statement_keyword)
         (argument
@@ -973,11 +1036,13 @@ module my-module-name {
           (statement
             (statement_keyword)
             (argument
-              (string)))
+              (string
+                (string_fragment))))
           (statement
             (statement_keyword)
             (argument
-              (string)))))
+              (string
+                (string_fragment))))))
       (statement
         (statement_keyword)
         (argument
@@ -986,11 +1051,13 @@ module my-module-name {
           (statement
             (statement_keyword)
             (argument
-              (string)))
+              (string
+                (string_fragment))))
           (statement
             (statement_keyword)
             (argument
-              (string)))))
+              (string
+                (string_fragment))))))
       (statement
         (statement_keyword)
         (argument
@@ -1014,7 +1081,8 @@ module my-module-name {
                     (extension_keyword)
                     (comment)
                     (argument
-                      (string)))
+                      (string
+                        (string_fragment))))
                   (statement
                     (statement_keyword)
                     (block
@@ -1037,7 +1105,8 @@ module my-module-name {
                           (statement
                             (statement_keyword)
                             (argument
-                              (string)))))))
+                              (string
+                                (string_fragment))))))))
                   (comment)))))))
       (statement
         (statement_keyword)
@@ -1048,9 +1117,11 @@ module my-module-name {
             (statement_keyword)
             (argument
               (string_concatenation
-                (string)
+                (string
+                  (string_fragment))
                 (plus_symbol)
-                (string)))
+                (string
+                  (string_fragment))))
             (block
               (statement
                 (statement_keyword)

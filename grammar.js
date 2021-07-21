@@ -19,6 +19,8 @@ module.exports = grammar({
         $.comment,
     ],
 
+    word: $ => $._word,
+
     rules: {
         yang: $ => choice(
             $.module,
@@ -223,6 +225,10 @@ module.exports = grammar({
          */
 
         _sep: $ => /\s/,
+
+        // Used as the grammar's "word" property. Each "word" is YANG is
+        // delimited only by whitespace, curly brackets and semi-colons.
+        _word: $ => /[^\s{};]/,
 
         built_in_type: $ => choice(
             'binary',

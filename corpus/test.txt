@@ -739,16 +739,19 @@ Can parse range arguments
 module my-module-name {
     typedef foo {
         type string {
-            length "3..64";
+            length "0..100";
+            length "-7174..-831";
+            length -48..1999;
+            length -10 .. 10;
         }
     }
 
     typedef bar {
         type uint32 {
-            range 0..100;
-            range 1..100;
-            range 10..100;
-            range -100..100;
+            range "0..100";
+            range "-7174..-831";
+            range -48..1999;
+            range -10 .. 10;
         }
     }
 }
@@ -773,7 +776,34 @@ module my-module-name {
                 (statement_keyword)
                 (argument
                   (range
-                    (quoted_range))))))))
+                    (quoted_range
+                      (start)
+                      (dots)
+                      (end)))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (quoted_range
+                      (start)
+                      (dots)
+                      (end)))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (unquoted_range
+                      (start)
+                      (dots)
+                      (end)))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (unquoted_range
+                      (start)
+                      (dots)
+                      (end)))))))))
       (statement
         (statement_keyword)
         (argument
@@ -788,7 +818,7 @@ module my-module-name {
                 (statement_keyword)
                 (argument
                   (range
-                    (unquoted_range
+                    (quoted_range
                       (start)
                       (dots)
                       (end)))))
@@ -796,7 +826,7 @@ module my-module-name {
                 (statement_keyword)
                 (argument
                   (range
-                    (unquoted_range
+                    (quoted_range
                       (start)
                       (dots)
                       (end)))))

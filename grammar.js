@@ -51,6 +51,7 @@ module.exports = grammar({
         statement: $ => choice(
             $._yang_version_statement,
             $._enum_statement,
+            $._range_statement,
             $._generic_statement,
         ),
 
@@ -63,6 +64,12 @@ module.exports = grammar({
         _enum_statement: $ => seq(
             alias('enum', $.statement_keyword),
             alias($.enum_argument, $.argument),
+            ';'
+        ),
+
+        _range_statement: $ => seq(
+            alias(choice('range', 'length'), $.statement_keyword),
+            alias($.range_argument, $.argument),
             ';'
         ),
 
@@ -127,7 +134,6 @@ module.exports = grammar({
             $.string,
             $.string_concatenation,
             $.date,
-            $.range,
             $.keypath,
             $.unquoted_string,
         ),
@@ -135,6 +141,8 @@ module.exports = grammar({
         yang_version_argument: $ => $.yang_version,
 
         enum_argument: $ => alias($._unquoted_string, $.enum_value),
+
+        range_argument: $ => $.range,
 
         identifier: $ => identifier,
 
@@ -213,15 +221,19 @@ module.exports = grammar({
             $.quoted_range,
         ),
 
-        _unquoted_range: $ => seq($._integer, '..', $._integer),
-
         unquoted_range: $ => seq(
             alias($._integer, $.start),
             alias('..', $.dots),
             alias($._integer, $.end),
         ),
 
-        quoted_range: $ => /"\d+\.\.\d+"/,
+        quoted_range: $ => seq(
+            '"',
+            alias($._integer, $.start),
+            alias('..', $.dots),
+            alias($._integer, $.end),
+            '"',
+        ),
 
         _keypath: $ => token(
             choice(
@@ -254,7 +266,6 @@ module.exports = grammar({
                     $._integer,
                     $._hex,
                     $._boolean,
-                    $._unquoted_range,
                     $._keypath,
                 ),
                 $._unquoted_string,
@@ -343,7 +354,7 @@ module.exports = grammar({
             'key',
             'leaf',
             'leaf-list',
-            'length',
+            // 'length',
             'list',
             'mandatory',
             'max-elements',
@@ -361,7 +372,7 @@ module.exports = grammar({
             'position',
             'prefix',
             'presence',
-            'range',
+            // 'range',
             'reference',
             'refine',
             'require-instance',

@@ -65,11 +65,6 @@ module.exports = grammar({
         _enum_statement: $ => seq(
             alias('enum', $.statement_keyword),
             alias($.enum_argument, $.argument),
-
-            // A statement can either have
-            // - An argument
-            // - An argument and a block
-            // - Just a block
             choice(
                 ';',
                 $.block,
@@ -79,7 +74,10 @@ module.exports = grammar({
         _range_statement: $ => seq(
             alias('range', $.statement_keyword),
             alias($.range_argument, $.argument),
-            ';'
+            choice(
+                ';',
+                $.block,
+            )
         ),
 
         _length_statement: $ => seq(
@@ -265,7 +263,11 @@ module.exports = grammar({
 
         keypath: $ => $._keypath,
 
-        yang_version: $ => choice('1', '1.1'),
+        yang_version: $ => seq(
+            optional(choice('"', "'")),
+            choice('1', '1.1'),
+            optional(choice('"', "'")),
+        ),
 
         // Unquoted strings are not explained in the ABNF grammar, but going by
         // all the examples in yang-modules, it seems like it can contain any

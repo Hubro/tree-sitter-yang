@@ -234,6 +234,11 @@ Can parse YANG-version arguments
 
 module my-module-name {
     yang-version 1.1;
+    yang-version "1.1";
+    yang-version '1.1';
+    yang-version 1;
+    yang-version "1";
+    yang-version '1';
 }
 
 --------------------------------------------------------------------------------
@@ -242,6 +247,26 @@ module my-module-name {
   (module
     module_name: (identifier)
     module_block: (block
+      (statement
+        (statement_keyword)
+        (argument
+          (yang_version)))
+      (statement
+        (statement_keyword)
+        (argument
+          (yang_version)))
+      (statement
+        (statement_keyword)
+        (argument
+          (yang_version)))
+      (statement
+        (statement_keyword)
+        (argument
+          (yang_version)))
+      (statement
+        (statement_keyword)
+        (argument
+          (yang_version)))
       (statement
         (statement_keyword)
         (argument
@@ -761,6 +786,11 @@ module my-module-name {
             range min..93182;
             range "min..max";
             range "min .. max";
+
+            // Range can have a block
+            range min..123 {
+                description "This is valid.";
+            }
         }
     }
 }
@@ -932,7 +962,22 @@ module my-module-name {
                     (quoted_range
                       (start)
                       (dots)
-                      (end))))))))))))
+                      (end)))))
+              (comment)
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (unquoted_range
+                      (start)
+                      (dots)
+                      (end))))
+                (block
+                  (statement
+                    (statement_keyword)
+                    (argument
+                      (string
+                        (string_fragment)))))))))))))
 
 ================================================================================
 Can parse enumerations

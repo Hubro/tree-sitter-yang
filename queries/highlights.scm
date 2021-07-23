@@ -6,23 +6,30 @@
 
 ; Keywords
 (statement_keyword) @keyword
-(extension_keyword) @string.escape
+(statement_keyword "import") @include
+(statement_keyword "input") @keyword.return
+(statement_keyword "output") @keyword.return
+(extension_keyword) @function
 
 ; Arguments
 (built_in_type) @type.builtin
 (number) @number
 (boolean) @boolean
 (date) @number
-(range) @string.escape
-(unquoted_range) @string.escape
-(yang_version) @string.escape
+(range (_ ".." @operator))
+(quoted_range "\"" @string)
+(yang_version) @constant.builtin
 (identifier) @variable
 (node_identifier) @variable
 (string) @string
+(string (escape_sequence) @string.escape)
 (unquoted_string) @string
 (keypath) @string.escape
 
+; Always highlight the value of an enum statement as a string
+(enum_value) @string
+
 ; Punctuation
-(plus_symbol) @punctuation.delimiter
+(plus_symbol) @operator
 ["{" "}"] @punctuation.bracket
 [";"] @punctuation.delimiter

@@ -760,6 +760,7 @@ module my-module-name {
     typedef foo {
         type string {
             length "0..100";
+            length "0..33";
             length "-7174..-831";
             length -48..1999;
             length -10 .. 10;
@@ -819,18 +820,26 @@ module my-module-name {
               (statement
                 (statement_keyword)
                 (argument
-                  (string
-                    (string_fragment))))
-              (statement
-                (statement_keyword)
-                (argument
-                  (string
-                    (string_fragment))))
+                  (range
+                    (quoted_range
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (statement
                 (statement_keyword)
                 (argument
                   (range
-                    (unquoted_range
+                    (quoted_range
+                      (start
+                        (number))
+                      (end
+                        (number))))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (quoted_range
                       (start
                         (number))
                       (end
@@ -874,13 +883,30 @@ module my-module-name {
               (statement
                 (statement_keyword)
                 (argument
-                  (string
-                    (string_fragment))))
+                  (range
+                    (unquoted_range
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (statement
                 (statement_keyword)
                 (argument
-                  (string
-                    (string_fragment))))
+                  (range
+                    (quoted_range
+                      (start
+                        (number))
+                      (end
+                        (number))))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (quoted_range
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (comment)
               (statement
                 (statement_keyword)
@@ -889,8 +915,7 @@ module my-module-name {
               (statement
                 (statement_keyword)
                 (argument
-                  (string
-                    (string_fragment))))))))
+                  (string)))))))
       (statement
         (statement_keyword)
         (argument

@@ -162,8 +162,8 @@ module.exports = grammar({
 
         length_argument: $ => choice(
             $.number,
+            alias($.quoted_number, $.string),
             $.range,
-            $.string,
         ),
 
         identifier: $ => identifier,
@@ -175,6 +175,8 @@ module.exports = grammar({
         _number: $ => /[-+]?[0-9]+(\.[0-9]+)?/,
 
         number: $ => $._number,
+
+        quoted_number: $ => seq('"', $._number, '"'),
 
         hex: $ => /-?0[xX][a-zA-Z0-9]+/,
 

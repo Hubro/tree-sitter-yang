@@ -136,8 +136,8 @@ module.exports = grammar({
         argument: $ => choice(
             $.built_in_type,
             $.node_identifier,
-            $.integer,
-            alias($.hex, $.integer),
+            $.number,
+            alias($.hex, $.number),
             $.boolean,
             $.string,
             $.string_concatenation,
@@ -159,9 +159,11 @@ module.exports = grammar({
 
         node_identifier: $ => node_identifier,
 
-        _integer: $ => /-?[0-9]+/,
+        // A number in YANG can optionally have a decimal component, and it can
+        // optionally have a leading + or -
+        _number: $ => /[-+]?[0-9]+(\.[0-9]+)?/,
 
-        integer: $ => $._integer,
+        number: $ => $._number,
 
         hex: $ => /-?0[xX][a-zA-Z0-9]+/,
 
@@ -228,16 +230,16 @@ module.exports = grammar({
         ),
 
         unquoted_range: $ => seq(
-            alias($._integer, $.start),
+            alias(choice($._number, 'min'), $.start),
             alias('..', $.dots),
-            alias($._integer, $.end),
+            alias(choice($._number, 'max'), $.end),
         ),
 
         quoted_range: $ => seq(
             '"',
-            alias($._integer, $.start),
+            alias($._number, $.start),
             alias('..', $.dots),
-            alias($._integer, $.end),
+            alias($._number, $.end),
             '"',
         ),
 

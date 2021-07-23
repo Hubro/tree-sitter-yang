@@ -248,7 +248,7 @@ module my-module-name {
           (yang_version))))))
 
 ================================================================================
-Can parse regular numbers
+Can parse numbers
 ================================================================================
 
 module my-module-name {
@@ -256,16 +256,13 @@ module my-module-name {
         leaf positive {
            type uint32;
            default 100;
-        }
-
-        leaf zero {
-           type uint32;
            default 0;
-        }
-
-        leaf negative {
-           type uint32;
            default -5;
+           default +5;
+
+           default 5.0;
+           default +3.14159265359;
+           default -13.37;
         }
     }
 }
@@ -293,33 +290,31 @@ module my-module-name {
               (statement
                 (statement_keyword)
                 (argument
-                  (integer)))))
-          (statement
-            (statement_keyword)
-            (argument
-              (node_identifier))
-            (block
+                  (number)))
               (statement
                 (statement_keyword)
                 (argument
-                  (built_in_type)))
+                  (number)))
               (statement
                 (statement_keyword)
                 (argument
-                  (integer)))))
-          (statement
-            (statement_keyword)
-            (argument
-              (node_identifier))
-            (block
+                  (number)))
               (statement
                 (statement_keyword)
                 (argument
-                  (built_in_type)))
+                  (number)))
               (statement
                 (statement_keyword)
                 (argument
-                  (integer))))))))))
+                  (number)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (number)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (number))))))))))
 
 ================================================================================
 Can parse hex numbers
@@ -367,7 +362,7 @@ module my-module-name {
               (statement
                 (statement_keyword)
                 (argument
-                  (integer)))))
+                  (number)))))
           (statement
             (statement_keyword)
             (argument
@@ -380,7 +375,7 @@ module my-module-name {
               (statement
                 (statement_keyword)
                 (argument
-                  (integer)))))
+                  (number)))))
           (statement
             (statement_keyword)
             (argument
@@ -393,7 +388,7 @@ module my-module-name {
               (statement
                 (statement_keyword)
                 (argument
-                  (integer))))))))))
+                  (number))))))))))
 
 ================================================================================
 Can parse booleans
@@ -946,7 +941,7 @@ module my-module-name {
                   (statement
                     (statement_keyword)
                     (argument
-                      (integer)))))
+                      (number)))))
               (statement
                 (statement_keyword)
                 (argument
@@ -956,7 +951,7 @@ module my-module-name {
                   (statement
                     (statement_keyword)
                     (argument
-                      (integer))))))))))))
+                      (number))))))))))))
 
 ================================================================================
 Can parse extension statements

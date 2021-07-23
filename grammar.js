@@ -41,11 +41,25 @@ module.exports = grammar({
 
         block: $ => seq(
             '{',
-            repeat(choice($.statement, $.extension_statement)),
+            repeat(choice(
+                $.statement,
+                $.extension_statement,
+            )),
             '}',
         ),
 
-        statement: $ => seq(
+        statement: $ => choice(
+            $._yang_version_statement,
+            $._generic_statement,
+        ),
+
+        _yang_version_statement: $ => seq(
+            alias('yang-version', $.statement_keyword),
+            alias($.yang_version_argument, $.argument),
+            ';'
+        ),
+
+        _generic_statement: $ => seq(
             $.statement_keyword,
 
             // A statement can either have
@@ -112,6 +126,8 @@ module.exports = grammar({
             $.glob,
             $.unquoted_string,
         ),
+
+        yang_version_argument: $ => $.yang_version,
 
         identifier: $ => identifier,
 
@@ -209,13 +225,7 @@ module.exports = grammar({
 
         keypath: $ => $._keypath,
 
-        // Currently, "yang-version" can only be 1.1
-        _yang_version: $ => choice(
-            token('1.1'),
-        ),
-
-        // Currently, "yang-version" can only be 1.1
-        yang_version: $ => $._yang_version,
+        yang_version: $ => choice('1', '1.1'),
 
         // Unquoted strings are not explained in the ABNF grammar, but going by
         // all the examples in yang-modules, it seems like it can contain any
@@ -296,6 +306,8 @@ module.exports = grammar({
             'union',
         ),
 
+        // All YANG statement keywords. Some keywords are commented out because
+        // they are handled by a custom statement.
         statement_keyword: $ => choice(
             'action',
             'anydata',
@@ -363,7 +375,7 @@ module.exports = grammar({
             'uses',
             'value',
             'when',
-            'yang-version',
+            // 'yang-version',
             'yin-element',
         )
     },

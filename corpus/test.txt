@@ -75,7 +75,7 @@ submodule my-module-name {
       (statement
         (statement_keyword)
         (argument
-          (unquoted_string)))
+          (yang_version)))
       (statement
         (statement_keyword)
         (argument
@@ -105,7 +105,7 @@ submodule my-module-name {
       (statement
         (statement_keyword)
         (argument
-          (unquoted_string)))
+          (yang_version)))
       (statement
         (statement_keyword)
         (argument
@@ -137,7 +137,7 @@ submodule my-module-name {
       (statement
         (statement_keyword)
         (argument
-          (unquoted_string)))
+          (yang_version)))
       (statement
         (statement_keyword)
         (argument
@@ -199,7 +199,7 @@ module my-module-name {   // And on the same line
       (statement
         (statement_keyword)
         (argument
-          (unquoted_string)))
+          (yang_version)))
       (comment)
       (statement
         (statement_keyword)
@@ -245,7 +245,7 @@ module my-module-name {
       (statement
         (statement_keyword)
         (argument
-          (unquoted_string))))))
+          (yang_version))))))
 
 ================================================================================
 Can parse regular numbers
@@ -1043,7 +1043,7 @@ module my-module-name {
       (statement
         (statement_keyword)
         (argument
-          (unquoted_string)))
+          (yang_version)))
       (statement
         (statement_keyword)
         (argument

@@ -14,8 +14,8 @@
 (number) @number
 (boolean) @boolean
 (date) @number
-(range (_ ".." @operator))
-(range (_ "|" @operator))
+(range (_ ".." @punctuation.special))
+(range (_ "|" @punctuation.special))
 (quoted_range "\"" @string.special)
 (quoted_range "'" @string.special)
 (yang_version) @constant.builtin

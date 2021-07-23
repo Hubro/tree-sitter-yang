@@ -171,10 +171,14 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "end",
+          "named": true
+        },
+        {
+          "type": "number",
           "named": true
         },
         {
@@ -320,10 +324,14 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "end",
+          "named": true
+        },
+        {
+          "type": "number",
           "named": true
         },
         {

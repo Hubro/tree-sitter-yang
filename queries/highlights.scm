@@ -7,8 +7,6 @@
 ; Keywords
 (statement_keyword) @keyword
 (statement_keyword "import") @include
-(statement_keyword "input") @keyword.return
-(statement_keyword "output") @keyword.return
 (extension_keyword) @function
 
 ; Arguments
@@ -17,17 +15,24 @@
 (boolean) @boolean
 (date) @number
 (range (_ ".." @operator))
-(quoted_range "\"" @string)
+(range (_ "|" @operator))
+(quoted_range "\"" @string.special)
+(quoted_range "'" @string.special)
 (yang_version) @constant.builtin
 (identifier) @variable
 (node_identifier) @variable
 (string) @string
 (string (escape_sequence) @string.escape)
 (unquoted_string) @string
-(keypath) @string.escape
+(keypath) @string.special
 
 ; Always highlight the value of an enum statement as a string
 (enum_value) @string
+
+; Highlight xpath and pattern strings differently from plain strings
+(statement
+  (statement_keyword ["pattern" "must"])
+  (argument (string) @string.special))
 
 ; Punctuation
 (plus_symbol) @operator

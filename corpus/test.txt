@@ -769,10 +769,13 @@ module my-module-name {
             length min..93182;
             length "min..max";
             length "min .. max";
+            length 'min..max';
+            length 'min .. max';
 
             // Length should also accept integers and strings
             length 123;
             length "123";
+            length '123';
         }
     }
 
@@ -907,11 +910,33 @@ module my-module-name {
                         (number))
                       (end
                         (number))))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (quoted_range
+                      (start
+                        (number))
+                      (end
+                        (number))))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (quoted_range
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (comment)
               (statement
                 (statement_keyword)
                 (argument
                   (number)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (string)))
               (statement
                 (statement_keyword)
                 (argument

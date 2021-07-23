@@ -176,7 +176,18 @@ module.exports = grammar({
 
         number: $ => $._number,
 
-        quoted_number: $ => seq('"', $._number, '"'),
+        quoted_number: $ => choice(
+            seq(
+                '"',
+                $._number,
+                '"',
+            ),
+            seq(
+                "'",
+                $._number,
+                "'",
+            ),
+        ),
 
         hex: $ => /-?0[xX][a-zA-Z0-9]+/,
 
@@ -244,10 +255,17 @@ module.exports = grammar({
 
         unquoted_range: $ => $._range,
 
-        quoted_range: $ => seq(
-            '"',
-            $._range,
-            '"',
+        quoted_range: $ => choice(
+            seq(
+                '"',
+                $._range,
+                '"',
+            ),
+            seq(
+                "'",
+                $._range,
+                "'",
+            ),
         ),
 
         _range: $ => seq(

@@ -5,3 +5,15 @@ model configuration data, state data, Remote Procedure Calls and notifications
 for network management protocols.
 
 https://datatracker.ietf.org/doc/html/rfc7950
+
+## TODO
+
+- [ ] Implement strings properly
+  
+  Currently the string parsing is just copied from [the Javascript grammar][javascript-grammar-string] and slightly modified to hide escape sequences in single quoted strings.
+  
+  Strings are well documented in the YANG RFC and should be properly implemented in the grammar:
+  
+  https://datatracker.ietf.org/doc/html/rfc7950#section-6.1.3
+  
+[javascript-grammar-string]: https://github.com/tree-sitter/tree-sitter-javascript/blob/2c5b138ea488259dbf11a34595042eb261965259/grammar.js#L865

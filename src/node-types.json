@@ -20,7 +20,7 @@
           "named": true
         },
         {
-          "type": "glob",
+          "type": "enum_value",
           "named": true
         },
         {
@@ -116,6 +116,11 @@
     "fields": {}
   },
   {
+    "type": "keypath",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "module",
     "named": true,
     "fields": {
@@ -144,6 +149,11 @@
         ]
       }
     }
+  },
+  {
+    "type": "node_identifier",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "range",
@@ -261,6 +271,34 @@
     }
   },
   {
+    "type": "unquoted_range",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "dots",
+          "named": true
+        },
+        {
+          "type": "end",
+          "named": true
+        },
+        {
+          "type": "start",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "unquoted_string",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "yang",
     "named": true,
     "fields": {},
@@ -290,6 +328,14 @@
   },
   {
     "type": "'",
+    "named": false
+  },
+  {
+    "type": "..",
+    "named": false
+  },
+  {
+    "type": "1",
     "named": false
   },
   {
@@ -393,12 +439,20 @@
     "named": false
   },
   {
+    "type": "dots",
+    "named": true
+  },
+  {
     "type": "empty",
     "named": false
   },
   {
-    "type": "enum",
-    "named": false
+    "type": "end",
+    "named": true
+  },
+  {
+    "type": "enum_value",
+    "named": true
   },
   {
     "type": "enumeration",
@@ -435,10 +489,6 @@
   {
     "type": "fraction-digits",
     "named": false
-  },
-  {
-    "type": "glob",
-    "named": true
   },
   {
     "type": "grouping",
@@ -497,10 +547,6 @@
     "named": false
   },
   {
-    "type": "keypath",
-    "named": true
-  },
-  {
     "type": "leaf",
     "named": false
   },
@@ -547,10 +593,6 @@
   {
     "type": "namespace",
     "named": false
-  },
-  {
-    "type": "node_identifier",
-    "named": true
   },
   {
     "type": "notification",
@@ -625,6 +667,10 @@
     "named": false
   },
   {
+    "type": "start",
+    "named": true
+  },
+  {
     "type": "status",
     "named": false
   },
@@ -681,14 +727,6 @@
     "named": false
   },
   {
-    "type": "unquoted_range",
-    "named": true
-  },
-  {
-    "type": "unquoted_string",
-    "named": true
-  },
-  {
     "type": "uses",
     "named": false
   },
@@ -698,10 +736,6 @@
   },
   {
     "type": "when",
-    "named": false
-  },
-  {
-    "type": "yang-version",
     "named": false
   },
   {

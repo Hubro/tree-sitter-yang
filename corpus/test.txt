@@ -823,10 +823,21 @@ Can parse enumerations
 
 module my-module-name {
     typedef foo {
-        // Apparently enums can have a glob value, even though it's not
-        // mentioned in the RFC or the ABNF spec.
+        // Enums can contain any value of any type, which can make them an
+        // eyesore when syntax highlighted. For that reason, the value for an
+        // enum statement should always just be an "enum_value".
         type enumeration {
             enum *;
+            enum 123;
+            enum 1*2;
+            enum foo;
+            enum FOO&BAR;
+            enum 00:00:15.0;
+            enum 1.2.3.4;
+            enum 0x1234_foo;
+            enum true&fair;
+            enum 1..100..1000;
+            enum meter/second^2;
         }
     }
 }
@@ -844,6 +855,7 @@ module my-module-name {
         (block
           (comment)
           (comment)
+          (comment)
           (statement
             (statement_keyword)
             (argument
@@ -852,7 +864,47 @@ module my-module-name {
               (statement
                 (statement_keyword)
                 (argument
-                  (glob))))))))))
+                  (enum_value)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (enum_value)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (enum_value)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (enum_value)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (enum_value)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (enum_value)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (enum_value)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (enum_value)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (enum_value)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (enum_value)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (enum_value))))))))))
 
 ================================================================================
 Can parse extension statements

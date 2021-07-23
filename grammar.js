@@ -50,12 +50,19 @@ module.exports = grammar({
 
         statement: $ => choice(
             $._yang_version_statement,
+            $._enum_statement,
             $._generic_statement,
         ),
 
         _yang_version_statement: $ => seq(
             alias('yang-version', $.statement_keyword),
             alias($.yang_version_argument, $.argument),
+            ';'
+        ),
+
+        _enum_statement: $ => seq(
+            alias('enum', $.statement_keyword),
+            alias($.enum_argument, $.argument),
             ';'
         ),
 
@@ -122,12 +129,12 @@ module.exports = grammar({
             $.date,
             $.range,
             $.keypath,
-            // $.yang_version,
-            $.glob,
             $.unquoted_string,
         ),
 
         yang_version_argument: $ => $.yang_version,
+
+        enum_argument: $ => alias($._unquoted_string, $.enum_value),
 
         identifier: $ => identifier,
 
@@ -256,11 +263,6 @@ module.exports = grammar({
 
         _unquoted_string: $ => token(prec(-1, /[^\s;"'{}]+/)),
 
-        // Confusingly, several of the IETF RFC YANG modules use glob values in
-        // enums, even though the YANG language RFC doesn't mention that this is
-        // possible.
-        glob: $ => '*',
-
         // Copied from "tree-sitter-javascript":
         //
         // https://github.com/tree-sitter/tree-sitter-javascript/blob/2c5b138ea488259dbf11a34595042eb261965259/grammar.js#L907
@@ -326,7 +328,7 @@ module.exports = grammar({
             'description',
             'deviate',
             'deviation',
-            'enum',
+            // 'enum',
             'error-app-tag',
             'error-message',
             'extension',

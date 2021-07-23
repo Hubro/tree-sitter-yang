@@ -1,5 +1,6 @@
 {
   "name": "yang",
+  "word": "_word",
   "rules": {
     "yang": {
       "type": "CHOICE",
@@ -112,6 +113,77 @@
       ]
     },
     "statement": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_yang_version_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_enum_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_generic_statement"
+        }
+      ]
+    },
+    "_yang_version_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "yang-version"
+          },
+          "named": true,
+          "value": "statement_keyword"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "yang_version_argument"
+          },
+          "named": true,
+          "value": "argument"
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        }
+      ]
+    },
+    "_enum_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "enum"
+          },
+          "named": true,
+          "value": "statement_keyword"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "enum_argument"
+          },
+          "named": true,
+          "value": "argument"
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        }
+      ]
+    },
+    "_generic_statement": {
       "type": "SEQ",
       "members": [
         {
@@ -304,6 +376,15 @@
           "name": "integer"
         },
         {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "hex"
+          },
+          "named": true,
+          "value": "integer"
+        },
+        {
           "type": "SYMBOL",
           "name": "boolean"
         },
@@ -329,40 +410,52 @@
         },
         {
           "type": "SYMBOL",
-          "name": "yang_version"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "glob"
-        },
-        {
-          "type": "SYMBOL",
           "name": "unquoted_string"
         }
       ]
+    },
+    "yang_version_argument": {
+      "type": "SYMBOL",
+      "name": "yang_version"
+    },
+    "enum_argument": {
+      "type": "ALIAS",
+      "content": {
+        "type": "SYMBOL",
+        "name": "_unquoted_string"
+      },
+      "named": true,
+      "value": "enum_value"
     },
     "identifier": {
       "type": "PATTERN",
       "value": "[a-zA-Z_][a-zA-Z0-9-_.]*"
     },
+    "_node_identifier": {
+      "type": "PATTERN",
+      "value": "([a-zA-Z_][a-zA-Z0-9-_.]*:)?[a-zA-Z_][a-zA-Z0-9-_.]*"
+    },
     "node_identifier": {
       "type": "PATTERN",
       "value": "([a-zA-Z_][a-zA-Z0-9-_.]*:)?[a-zA-Z_][a-zA-Z0-9-_.]*"
     },
-    "integer": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "PATTERN",
-          "value": "-?\\d+"
-        },
-        {
-          "type": "PATTERN",
-          "value": "-?0[xX][a-zA-Z0-9]+"
-        }
-      ]
+    "_integer": {
+      "type": "PATTERN",
+      "value": "-?[0-9]+"
     },
-    "boolean": {
+    "integer": {
+      "type": "SYMBOL",
+      "name": "_integer"
+    },
+    "_hex": {
+      "type": "PATTERN",
+      "value": "-?0[xX][a-zA-Z0-9]+"
+    },
+    "hex": {
+      "type": "SYMBOL",
+      "name": "_hex"
+    },
+    "_boolean": {
       "type": "CHOICE",
       "members": [
         {
@@ -374,6 +467,10 @@
           "value": "false"
         }
       ]
+    },
+    "boolean": {
+      "type": "SYMBOL",
+      "name": "_boolean"
     },
     "string": {
       "type": "CHOICE",
@@ -554,15 +651,60 @@
         }
       ]
     },
+    "_unquoted_range": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_integer"
+        },
+        {
+          "type": "STRING",
+          "value": ".."
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_integer"
+        }
+      ]
+    },
     "unquoted_range": {
-      "type": "PATTERN",
-      "value": "\\d+\\.\\.\\d+"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_integer"
+          },
+          "named": true,
+          "value": "start"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": ".."
+          },
+          "named": true,
+          "value": "dots"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_integer"
+          },
+          "named": true,
+          "value": "end"
+        }
+      ]
     },
     "quoted_range": {
       "type": "PATTERN",
       "value": "\"\\d+\\.\\.\\d+\""
     },
-    "keypath": {
+    "_keypath": {
       "type": "TOKEN",
       "content": {
         "type": "CHOICE",
@@ -611,9 +753,17 @@
         ]
       }
     },
+    "keypath": {
+      "type": "SYMBOL",
+      "name": "_keypath"
+    },
     "yang_version": {
       "type": "CHOICE",
       "members": [
+        {
+          "type": "STRING",
+          "value": "1"
+        },
         {
           "type": "STRING",
           "value": "1.1"
@@ -621,12 +771,62 @@
       ]
     },
     "unquoted_string": {
-      "type": "PATTERN",
-      "value": "[^\\s;\"'{}]+"
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_unquoted_string"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "_node_identifier"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_integer"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_hex"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_boolean"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_unquoted_range"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_keypath"
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_unquoted_string"
+            }
+          ]
+        }
+      ]
     },
-    "glob": {
-      "type": "STRING",
-      "value": "*"
+    "_unquoted_string": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": -1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[^\\s;\"'{}]+"
+        }
+      }
     },
     "comment": {
       "type": "TOKEN",
@@ -668,7 +868,11 @@
     },
     "_sep": {
       "type": "PATTERN",
-      "value": "\\s"
+      "value": "\\s+"
+    },
+    "_word": {
+      "type": "PATTERN",
+      "value": "[^\\s{};]"
     },
     "built_in_type": {
       "type": "CHOICE",
@@ -821,10 +1025,6 @@
         {
           "type": "STRING",
           "value": "deviation"
-        },
-        {
-          "type": "STRING",
-          "value": "enum"
         },
         {
           "type": "STRING",
@@ -1020,10 +1220,6 @@
         },
         {
           "type": "STRING",
-          "value": "yang-version"
-        },
-        {
-          "type": "STRING",
           "value": "yin-element"
         }
       ]
@@ -1032,7 +1228,7 @@
   "extras": [
     {
       "type": "PATTERN",
-      "value": "\\s"
+      "value": "\\s+"
     },
     {
       "type": "SYMBOL",

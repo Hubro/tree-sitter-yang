@@ -18,7 +18,6 @@
 (yang_version) @string.escape
 (identifier) @variable
 (node_identifier) @variable
-(glob) @string
 (string) @string
 (unquoted_string) @string
 (keypath) @string.escape

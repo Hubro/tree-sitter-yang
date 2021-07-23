@@ -148,7 +148,10 @@ module.exports = grammar({
 
         yang_version_argument: $ => $.yang_version,
 
-        enum_argument: $ => alias($._unquoted_string, $.enum_value),
+        enum_argument: $ => choice(
+            $.string,
+            alias($._unquoted_string, $.enum_value),
+        ),
 
         range_argument: $ => $.range,
 

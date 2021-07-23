@@ -871,6 +871,10 @@ module my-module-name {
             enum meter/second^2 {
                 value 1;
             }
+
+            enum "meter/second^2" {
+                value 1;
+            }
         }
     }
 }
@@ -938,6 +942,16 @@ module my-module-name {
                 (statement_keyword)
                 (argument
                   (enum_value))
+                (block
+                  (statement
+                    (statement_keyword)
+                    (argument
+                      (integer)))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (string
+                    (string_fragment)))
                 (block
                   (statement
                     (statement_keyword)

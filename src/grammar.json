@@ -464,13 +464,22 @@
       "name": "yang_version"
     },
     "enum_argument": {
-      "type": "ALIAS",
-      "content": {
-        "type": "SYMBOL",
-        "name": "_unquoted_string"
-      },
-      "named": true,
-      "value": "enum_value"
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "string"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_unquoted_string"
+          },
+          "named": true,
+          "value": "enum_value"
+        }
+      ]
     },
     "range_argument": {
       "type": "SYMBOL",

@@ -64,7 +64,15 @@ module.exports = grammar({
         _enum_statement: $ => seq(
             alias('enum', $.statement_keyword),
             alias($.enum_argument, $.argument),
-            ';'
+
+            // A statement can either have
+            // - An argument
+            // - An argument and a block
+            // - Just a block
+            choice(
+                ';',
+                $.block,
+            )
         ),
 
         _range_statement: $ => seq(

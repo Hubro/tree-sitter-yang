@@ -867,7 +867,10 @@ module my-module-name {
             enum 0x1234_foo;
             enum true&fair;
             enum 1..100..1000;
-            enum meter/second^2;
+
+            enum meter/second^2 {
+                value 1;
+            }
         }
     }
 }
@@ -934,7 +937,12 @@ module my-module-name {
               (statement
                 (statement_keyword)
                 (argument
-                  (enum_value))))))))))
+                  (enum_value))
+                (block
+                  (statement
+                    (statement_keyword)
+                    (argument
+                      (integer))))))))))))
 
 ================================================================================
 Can parse extension statements

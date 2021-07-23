@@ -791,6 +791,11 @@ module my-module-name {
             range min..123 {
                 description "This is valid.";
             }
+
+            // Ranges can have multiple segments
+            range "min..100 | 105..max";
+            range "min .. 100 | 105 .. max";
+            range "min..100|105..400";
         }
     }
 }
@@ -826,41 +831,46 @@ module my-module-name {
                 (argument
                   (range
                     (unquoted_range
-                      (start)
-                      (dots)
-                      (end)))))
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (statement
                 (statement_keyword)
                 (argument
                   (range
                     (unquoted_range
-                      (start)
-                      (dots)
-                      (end)))))
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (statement
                 (statement_keyword)
                 (argument
                   (range
                     (unquoted_range
-                      (start)
-                      (dots)
-                      (end)))))
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (statement
                 (statement_keyword)
                 (argument
                   (range
                     (unquoted_range
-                      (start)
-                      (dots)
-                      (end)))))
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (statement
                 (statement_keyword)
                 (argument
                   (range
                     (unquoted_range
-                      (start)
-                      (dots)
-                      (end)))))
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (statement
                 (statement_keyword)
                 (argument
@@ -896,88 +906,138 @@ module my-module-name {
                 (argument
                   (range
                     (quoted_range
-                      (start)
-                      (dots)
-                      (end)))))
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (statement
                 (statement_keyword)
                 (argument
                   (range
                     (quoted_range
-                      (start)
-                      (dots)
-                      (end)))))
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (statement
                 (statement_keyword)
                 (argument
                   (range
                     (unquoted_range
-                      (start)
-                      (dots)
-                      (end)))))
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (statement
                 (statement_keyword)
                 (argument
                   (range
                     (unquoted_range
-                      (start)
-                      (dots)
-                      (end)))))
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (statement
                 (statement_keyword)
                 (argument
                   (range
                     (unquoted_range
-                      (start)
-                      (dots)
-                      (end)))))
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (statement
                 (statement_keyword)
                 (argument
                   (range
                     (unquoted_range
-                      (start)
-                      (dots)
-                      (end)))))
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (statement
                 (statement_keyword)
                 (argument
                   (range
                     (unquoted_range
-                      (start)
-                      (dots)
-                      (end)))))
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (statement
                 (statement_keyword)
                 (argument
                   (range
                     (quoted_range
-                      (start)
-                      (dots)
-                      (end)))))
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (statement
                 (statement_keyword)
                 (argument
                   (range
                     (quoted_range
-                      (start)
-                      (dots)
-                      (end)))))
+                      (start
+                        (number))
+                      (end
+                        (number))))))
               (comment)
               (statement
                 (statement_keyword)
                 (argument
                   (range
                     (unquoted_range
-                      (start)
-                      (dots)
-                      (end))))
+                      (start
+                        (number))
+                      (end
+                        (number)))))
                 (block
                   (statement
                     (statement_keyword)
                     (argument
                       (string
-                        (string_fragment)))))))))))))
+                        (string_fragment))))))
+              (comment)
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (quoted_range
+                      (start
+                        (number))
+                      (end
+                        (number))
+                      (start
+                        (number))
+                      (end
+                        (number))))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (quoted_range
+                      (start
+                        (number))
+                      (end
+                        (number))
+                      (start
+                        (number))
+                      (end
+                        (number))))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (quoted_range
+                      (start
+                        (number))
+                      (end
+                        (number))
+                      (start
+                        (number))
+                      (end
+                        (number)))))))))))))
 
 ================================================================================
 Can parse enumerations
@@ -1152,6 +1212,8 @@ module my-module-name {
 Lots of diverse grammar used together
 ================================================================================
 
+// Contains various syntax that previously broke the parser. Serves as an extra
+// regression test.
 module my-module-name {
     yang-version 1.1;
     namespace "https://foo.bar.com/my-module-name";
@@ -1222,11 +1284,19 @@ module my-module-name {
             error-message 'Oh no!';
         }
     }
+
+    typedef vlan-index-type {
+        type uint32 {
+            range "1..4094 | 4096..4294967295";
+        }
+    }
 }
 
 --------------------------------------------------------------------------------
 
 (yang
+  (comment)
+  (comment)
   (module
     (identifier)
     (block
@@ -1370,4 +1440,27 @@ module my-module-name {
               (statement
                 (statement_keyword)
                 (argument
-                  (string))))))))))
+                  (string)))))))
+      (statement
+        (statement_keyword)
+        (argument
+          (node_identifier))
+        (block
+          (statement
+            (statement_keyword)
+            (argument
+              (built_in_type))
+            (block
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (quoted_range
+                      (start
+                        (number))
+                      (end
+                        (number))
+                      (start
+                        (number))
+                      (end
+                        (number)))))))))))))

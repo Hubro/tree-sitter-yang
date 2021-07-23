@@ -240,18 +240,36 @@ module.exports = grammar({
             $.quoted_range,
         ),
 
-        unquoted_range: $ => seq(
-            alias(choice($._number, 'min'), $.start),
-            alias('..', $.dots),
-            alias(choice($._number, 'max'), $.end),
-        ),
+        unquoted_range: $ => $._range,
 
         quoted_range: $ => seq(
             '"',
-            alias(choice($._number, 'min'), $.start),
-            alias('..', $.dots),
-            alias(choice($._number, 'max'), $.end),
+            $._range,
             '"',
+        ),
+
+        _range: $ => seq(
+            $._inner_range,
+            repeat(seq(
+                '|',
+                $._inner_range
+            )),
+        ),
+
+        _inner_range: $ => seq(
+            alias($._inner_range_start, $.start),
+            '..',
+            alias($._inner_range_end, $.end),
+        ),
+
+        _inner_range_start: $ => choice(
+            $.number,
+            alias('min', $.number)
+        ),
+
+        _inner_range_end: $ => choice(
+            $.number,
+            alias('max', $.number)
         ),
 
         _keypath: $ => token(

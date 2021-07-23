@@ -52,6 +52,7 @@ module.exports = grammar({
             $._yang_version_statement,
             $._enum_statement,
             $._range_statement,
+            $._length_statement,
             $._generic_statement,
         ),
 
@@ -76,8 +77,14 @@ module.exports = grammar({
         ),
 
         _range_statement: $ => seq(
-            alias(choice('range', 'length'), $.statement_keyword),
+            alias('range', $.statement_keyword),
             alias($.range_argument, $.argument),
+            ';'
+        ),
+
+        _length_statement: $ => seq(
+            alias('length', $.statement_keyword),
+            alias($.length_argument, $.argument),
             ';'
         ),
 
@@ -154,6 +161,12 @@ module.exports = grammar({
         ),
 
         range_argument: $ => $.range,
+
+        length_argument: $ => choice(
+            $.number,
+            $.range,
+            $.string,
+        ),
 
         identifier: $ => identifier,
 
@@ -237,9 +250,9 @@ module.exports = grammar({
 
         quoted_range: $ => seq(
             '"',
-            alias($._number, $.start),
+            alias(choice($._number, 'min'), $.start),
             alias('..', $.dots),
-            alias($._number, $.end),
+            alias(choice($._number, 'max'), $.end),
             '"',
         ),
 

@@ -129,6 +129,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "_length_statement"
+        },
+        {
+          "type": "SYMBOL",
           "name": "_generic_statement"
         }
       ]
@@ -202,17 +206,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "STRING",
-                "value": "range"
-              },
-              {
-                "type": "STRING",
-                "value": "length"
-              }
-            ]
+            "type": "STRING",
+            "value": "range"
           },
           "named": true,
           "value": "statement_keyword"
@@ -222,6 +217,33 @@
           "content": {
             "type": "SYMBOL",
             "name": "range_argument"
+          },
+          "named": true,
+          "value": "argument"
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        }
+      ]
+    },
+    "_length_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "length"
+          },
+          "named": true,
+          "value": "statement_keyword"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "length_argument"
           },
           "named": true,
           "value": "argument"
@@ -422,7 +444,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "integer"
+          "name": "number"
         },
         {
           "type": "ALIAS",
@@ -431,7 +453,7 @@
             "name": "hex"
           },
           "named": true,
-          "value": "integer"
+          "value": "number"
         },
         {
           "type": "SYMBOL",
@@ -485,6 +507,23 @@
       "type": "SYMBOL",
       "name": "range"
     },
+    "length_argument": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "number"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "range"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "string"
+        }
+      ]
+    },
     "identifier": {
       "type": "PATTERN",
       "value": "[a-zA-Z_][a-zA-Z0-9-_.]*"
@@ -493,13 +532,13 @@
       "type": "PATTERN",
       "value": "([a-zA-Z_][a-zA-Z0-9-_.]*:)?[a-zA-Z_][a-zA-Z0-9-_.]*"
     },
-    "_integer": {
+    "_number": {
       "type": "PATTERN",
-      "value": "-?[0-9]+"
+      "value": "[-+]?[0-9]+(\\.[0-9]+)?"
     },
-    "integer": {
+    "number": {
       "type": "SYMBOL",
-      "name": "_integer"
+      "name": "_number"
     },
     "hex": {
       "type": "PATTERN",
@@ -703,8 +742,17 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "SYMBOL",
-            "name": "_integer"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_number"
+              },
+              {
+                "type": "STRING",
+                "value": "min"
+              }
+            ]
           },
           "named": true,
           "value": "start"
@@ -721,8 +769,17 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "SYMBOL",
-            "name": "_integer"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_number"
+              },
+              {
+                "type": "STRING",
+                "value": "max"
+              }
+            ]
           },
           "named": true,
           "value": "end"
@@ -739,8 +796,17 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "SYMBOL",
-            "name": "_integer"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_number"
+              },
+              {
+                "type": "STRING",
+                "value": "min"
+              }
+            ]
           },
           "named": true,
           "value": "start"
@@ -757,8 +823,17 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "SYMBOL",
-            "name": "_integer"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_number"
+              },
+              {
+                "type": "STRING",
+                "value": "max"
+              }
+            ]
           },
           "named": true,
           "value": "end"

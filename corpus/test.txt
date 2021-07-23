@@ -738,6 +738,15 @@ module my-module-name {
             length "-7174..-831";
             length -48..1999;
             length -10 .. 10;
+            length min..max;
+            length -20..max;
+            length min..93182;
+            length "min..max";
+            length "min .. max";
+
+            // Length should also accept integers and strings
+            length 123;
+            length "123";
         }
     }
 
@@ -747,6 +756,11 @@ module my-module-name {
             range "-7174..-831";
             range -48..1999;
             range -10 .. 10;
+            range min..max;
+            range -20..max;
+            range min..93182;
+            range "min..max";
+            range "min .. max";
         }
     }
 }
@@ -770,8 +784,18 @@ module my-module-name {
               (statement
                 (statement_keyword)
                 (argument
+                  (string
+                    (string_fragment))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (string
+                    (string_fragment))))
+              (statement
+                (statement_keyword)
+                (argument
                   (range
-                    (quoted_range
+                    (unquoted_range
                       (start)
                       (dots)
                       (end)))))
@@ -779,7 +803,7 @@ module my-module-name {
                 (statement_keyword)
                 (argument
                   (range
-                    (quoted_range
+                    (unquoted_range
                       (start)
                       (dots)
                       (end)))))
@@ -798,7 +822,35 @@ module my-module-name {
                     (unquoted_range
                       (start)
                       (dots)
-                      (end)))))))))
+                      (end)))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (unquoted_range
+                      (start)
+                      (dots)
+                      (end)))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (string
+                    (string_fragment))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (string
+                    (string_fragment))))
+              (comment)
+              (statement
+                (statement_keyword)
+                (argument
+                  (number)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (string
+                    (string_fragment))))))))
       (statement
         (statement_keyword)
         (argument
@@ -838,6 +890,46 @@ module my-module-name {
                 (argument
                   (range
                     (unquoted_range
+                      (start)
+                      (dots)
+                      (end)))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (unquoted_range
+                      (start)
+                      (dots)
+                      (end)))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (unquoted_range
+                      (start)
+                      (dots)
+                      (end)))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (unquoted_range
+                      (start)
+                      (dots)
+                      (end)))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (quoted_range
+                      (start)
+                      (dots)
+                      (end)))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (quoted_range
                       (start)
                       (dots)
                       (end))))))))))))

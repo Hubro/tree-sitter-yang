@@ -10,7 +10,7 @@
 
 ; Arguments
 (built_in_type) @type.builtin
-(integer) @number
+(number) @number
 (boolean) @boolean
 (date) @number
 (range) @string.escape

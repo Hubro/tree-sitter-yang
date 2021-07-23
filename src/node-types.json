@@ -24,15 +24,15 @@
           "named": true
         },
         {
-          "type": "integer",
-          "named": true
-        },
-        {
           "type": "keypath",
           "named": true
         },
         {
           "type": "node_identifier",
+          "named": true
+        },
+        {
+          "type": "number",
           "named": true
         },
         {
@@ -111,11 +111,6 @@
     }
   },
   {
-    "type": "integer",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "keypath",
     "named": true,
     "fields": {}
@@ -149,6 +144,11 @@
         ]
       }
     }
+  },
+  {
+    "type": "number",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "quoted_range",

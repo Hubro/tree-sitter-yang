@@ -650,32 +650,20 @@ Can parse unquoted strings
 // https://github.com/YangModels/yang repository.
 module my-string-testing-module {
     container unquoted-string-madness {
-        leaf some-time {
-            type time-interval;
+        must .=not(../some-time);
+
+        leaf tests {
+            type string;
+
+            default FOO;
+            default BAR;
+            default FOO&BAR;
             default 00:00:15.0;
-        }
-
-        leaf some-thing {
-            type thing;
             default 1.2.3.4;
-            must .=not(../some-time);
-        }
-    }
-
-    typedef acceleration {
-        type ieee1906-dot1-function:variable;
-        units meter/second^2;
-    }
-
-    typedef {
-        type enumeration {
-            enum FOO;
-            enum BAR;
-            enum FOO&BAR;
-            enum 0x1234_foo;
-            enum true&fair;
-            enum 1..100;
-            enum 1..100..1000;
+            default 0x1234_foo;
+            default true&fair;
+            default 1..100..1000;
+            default meter/second^2;
         }
     }
 }
@@ -697,16 +685,7 @@ module my-string-testing-module {
           (statement
             (statement_keyword)
             (argument
-              (node_identifier))
-            (block
-              (statement
-                (statement_keyword)
-                (argument
-                  (node_identifier)))
-              (statement
-                (statement_keyword)
-                (argument
-                  (unquoted_string)))))
+              (unquoted_string)))
           (statement
             (statement_keyword)
             (argument
@@ -715,36 +694,7 @@ module my-string-testing-module {
               (statement
                 (statement_keyword)
                 (argument
-                  (node_identifier)))
-              (statement
-                (statement_keyword)
-                (argument
-                  (unquoted_string)))
-              (statement
-                (statement_keyword)
-                (argument
-                  (unquoted_string)))))))
-      (statement
-        (statement_keyword)
-        (argument
-          (node_identifier))
-        (block
-          (statement
-            (statement_keyword)
-            (argument
-              (node_identifier)))
-          (statement
-            (statement_keyword)
-            (argument
-              (unquoted_string)))))
-      (statement
-        (statement_keyword)
-        (block
-          (statement
-            (statement_keyword)
-            (argument
-              (built_in_type))
-            (block
+                  (built_in_type)))
               (statement
                 (statement_keyword)
                 (argument
@@ -768,11 +718,15 @@ module my-string-testing-module {
               (statement
                 (statement_keyword)
                 (argument
-                  (range
-                    (unquoted_range
-                      (start)
-                      (dots)
-                      (end)))))
+                  (unquoted_string)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (unquoted_string)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (unquoted_string)))
               (statement
                 (statement_keyword)
                 (argument

@@ -799,7 +799,8 @@ module my-module-name {
             // Ranges can have multiple segments
             range "min..100 | 105..max";
             range "min .. 100 | 105 .. max";
-            range "min..100|105..400";
+            range 'min..100|105..400';
+            range '10|105..400';
         }
     }
 }
@@ -936,11 +937,15 @@ module my-module-name {
               (statement
                 (statement_keyword)
                 (argument
-                  (string)))
+                  (range
+                    (quoted_range
+                      (number)))))
               (statement
                 (statement_keyword)
                 (argument
-                  (string)))))))
+                  (range
+                    (quoted_range
+                      (number)))))))))
       (statement
         (statement_keyword)
         (argument
@@ -1084,6 +1089,16 @@ module my-module-name {
                         (number))
                       (end
                         (number))
+                      (start
+                        (number))
+                      (end
+                        (number))))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (quoted_range
+                      (number)
                       (start
                         (number))
                       (end

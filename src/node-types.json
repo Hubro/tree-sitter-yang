@@ -151,9 +151,27 @@
     }
   },
   {
-    "type": "node_identifier",
+    "type": "quoted_range",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "dots",
+          "named": true
+        },
+        {
+          "type": "end",
+          "named": true
+        },
+        {
+          "type": "start",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "range",
@@ -328,10 +346,6 @@
   },
   {
     "type": "'",
-    "named": false
-  },
-  {
-    "type": "..",
     "named": false
   },
   {
@@ -559,10 +573,6 @@
     "named": false
   },
   {
-    "type": "length",
-    "named": false
-  },
-  {
     "type": "list",
     "named": false
   },
@@ -593,6 +603,10 @@
   {
     "type": "namespace",
     "named": false
+  },
+  {
+    "type": "node_identifier",
+    "named": true
   },
   {
     "type": "notification",
@@ -632,14 +646,6 @@
   },
   {
     "type": "presence",
-    "named": false
-  },
-  {
-    "type": "quoted_range",
-    "named": true
-  },
-  {
-    "type": "range",
     "named": false
   },
   {

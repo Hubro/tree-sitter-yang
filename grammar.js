@@ -146,25 +146,20 @@ module.exports = grammar({
 
         identifier: $ => identifier,
 
-        _node_identifier: $ => node_identifier,
-
         node_identifier: $ => node_identifier,
 
         _integer: $ => /-?[0-9]+/,
 
         integer: $ => $._integer,
 
-        _hex: $ => /-?0[xX][a-zA-Z0-9]+/,
+        hex: $ => /-?0[xX][a-zA-Z0-9]+/,
 
-        hex: $ => $._hex,
-
-        _boolean: $ => choice("true", "false"),
-
-        boolean: $ => $._boolean,
+        boolean: $ => choice("true", "false"),
 
         // Copied from "tree-sitter-javascript":
         //
-        // Slightly modified to hide the string fragments from the syntax tree.
+        // Slightly modified to hide the string fragments from the syntax tree
+        // in the single quote string.
         //
         // https://github.com/tree-sitter/tree-sitter-javascript/blob/2c5b138ea488259dbf11a34595042eb261965259/grammar.js#L865
         //
@@ -250,29 +245,9 @@ module.exports = grammar({
         // all the examples in yang-modules, it seems like it can contain any
         // symbol except for whitespace, semicolons, quotes and curly brackets.
         //
-        // Implementation note: Unquoted strings must have the absolute lowest
-        // precedence, since they conflict with literally every other type. The
-        // result of this is that an unquoted string that *starts* with some
-        // text that matches a different type will be lexed as that other type,
-        // followed by garbage text. For that reason, the unquoted string symbol
-        // must also match any other argument type that is followed by an
-        // unquoted string.
-        //
-        unquoted_string: $ => choice(
-            $._unquoted_string,
-            seq(
-                choice(
-                    $._node_identifier,
-                    $._integer,
-                    $._hex,
-                    $._boolean,
-                    $._keypath,
-                ),
-                $._unquoted_string,
-            ),
-        ),
+        _unquoted_string: $ => /[^\s;"'{}]+/,
 
-        _unquoted_string: $ => token(prec(-1, /[^\s;"'{}]+/)),
+        unquoted_string: $ => $._unquoted_string,
 
         // Copied from "tree-sitter-javascript":
         //

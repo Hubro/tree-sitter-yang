@@ -15,7 +15,7 @@ module.exports = grammar({
     name: "yang",
 
     extras: $ => [
-        /\s/,
+        /\s+/,
         $.comment,
     ],
 
@@ -101,27 +101,35 @@ module.exports = grammar({
             $.built_in_type,
             $.node_identifier,
             $.integer,
+            alias($.hex, $.integer),
             $.boolean,
             $.string,
             $.string_concatenation,
             $.date,
             $.range,
             $.keypath,
-            $.yang_version,
+            // $.yang_version,
             $.glob,
             $.unquoted_string,
         ),
 
         identifier: $ => identifier,
 
+        _node_identifier: $ => node_identifier,
+
         node_identifier: $ => node_identifier,
 
-        integer: $ => choice(
-            /-?\d+/,
-            /-?0[xX][a-zA-Z0-9]+/
-        ),
+        _integer: $ => /-?[0-9]+/,
 
-        boolean: $ => choice("true", "false"),
+        integer: $ => $._integer,
+
+        _hex: $ => /-?0[xX][a-zA-Z0-9]+/,
+
+        hex: $ => $._hex,
+
+        _boolean: $ => choice("true", "false"),
+
+        boolean: $ => $._boolean,
 
         // Copied from "tree-sitter-javascript":
         //
@@ -182,25 +190,61 @@ module.exports = grammar({
             $.quoted_range,
         ),
 
-        unquoted_range: $ => /\d+\.\.\d+/,
+        _unquoted_range: $ => seq($._integer, '..', $._integer),
+
+        unquoted_range: $ => seq(
+            alias($._integer, $.start),
+            alias('..', $.dots),
+            alias($._integer, $.end),
+        ),
+
         quoted_range: $ => /"\d+\.\.\d+"/,
 
-        keypath: $ => token(
+        _keypath: $ => token(
             choice(
                 absolute_keypath(),
                 relative_keypath(),
             )
         ),
 
+        keypath: $ => $._keypath,
+
         // Currently, "yang-version" can only be 1.1
-        yang_version: $ => choice(
-            '1.1',
+        _yang_version: $ => choice(
+            token('1.1'),
         ),
+
+        // Currently, "yang-version" can only be 1.1
+        yang_version: $ => $._yang_version,
 
         // Unquoted strings are not explained in the ABNF grammar, but going by
         // all the examples in yang-modules, it seems like it can contain any
         // symbol except for whitespace, semicolons, quotes and curly brackets.
-        unquoted_string: $ => /[^\s;"'{}]+/,
+        //
+        // Implementation note: Unquoted strings must have the absolute lowest
+        // precedence, since they conflict with literally every other type. The
+        // result of this is that an unquoted string that *starts* with some
+        // text that matches a different type will be lexed as that other type,
+        // followed by garbage text. For that reason, the unquoted string symbol
+        // must also match any other argument type that is followed by an
+        // unquoted string.
+        //
+        unquoted_string: $ => choice(
+            $._unquoted_string,
+            seq(
+                choice(
+                    $._node_identifier,
+                    $._integer,
+                    $._hex,
+                    $._boolean,
+                    $._unquoted_range,
+                    $._keypath,
+                ),
+                $._unquoted_string,
+            ),
+        ),
+
+        _unquoted_string: $ => token(prec(-1, /[^\s;"'{}]+/)),
 
         // Confusingly, several of the IETF RFC YANG modules use glob values in
         // enums, even though the YANG language RFC doesn't mention that this is
@@ -224,7 +268,7 @@ module.exports = grammar({
          * Misc
          */
 
-        _sep: $ => /\s/,
+        _sep: $ => /\s+/,
 
         // Used as the grammar's "word" property. Each "word" is YANG is
         // delimited only by whitespace, curly brackets and semi-colons.

@@ -75,7 +75,7 @@ submodule my-module-name {
       (statement
         (statement_keyword)
         (argument
-          (yang_version)))
+          (unquoted_string)))
       (statement
         (statement_keyword)
         (argument
@@ -105,7 +105,7 @@ submodule my-module-name {
       (statement
         (statement_keyword)
         (argument
-          (yang_version)))
+          (unquoted_string)))
       (statement
         (statement_keyword)
         (argument
@@ -137,7 +137,7 @@ submodule my-module-name {
       (statement
         (statement_keyword)
         (argument
-          (yang_version)))
+          (unquoted_string)))
       (statement
         (statement_keyword)
         (argument
@@ -199,7 +199,7 @@ module my-module-name {   // And on the same line
       (statement
         (statement_keyword)
         (argument
-          (yang_version)))
+          (unquoted_string)))
       (comment)
       (statement
         (statement_keyword)
@@ -245,7 +245,7 @@ module my-module-name {
       (statement
         (statement_keyword)
         (argument
-          (yang_version))))))
+          (unquoted_string))))))
 
 ================================================================================
 Can parse regular numbers
@@ -672,6 +672,10 @@ module my-string-testing-module {
             enum FOO;
             enum BAR;
             enum FOO&BAR;
+            enum 0x1234_foo;
+            enum true&fair;
+            enum 1..100;
+            enum 1..100..1000;
         }
     }
 }
@@ -752,6 +756,26 @@ module my-string-testing-module {
               (statement
                 (statement_keyword)
                 (argument
+                  (unquoted_string)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (unquoted_string)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (unquoted_string)))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (unquoted_range
+                      (start)
+                      (dots)
+                      (end)))))
+              (statement
+                (statement_keyword)
+                (argument
                   (unquoted_string))))))))))
 
 ================================================================================
@@ -768,6 +792,9 @@ module my-module-name {
     typedef bar {
         type uint32 {
             range 0..100;
+            range 1..100;
+            range 10..100;
+            range -100..100;
         }
     }
 }
@@ -807,7 +834,34 @@ module my-module-name {
                 (statement_keyword)
                 (argument
                   (range
-                    (unquoted_range)))))))))))
+                    (unquoted_range
+                      (start)
+                      (dots)
+                      (end)))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (unquoted_range
+                      (start)
+                      (dots)
+                      (end)))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (unquoted_range
+                      (start)
+                      (dots)
+                      (end)))))
+              (statement
+                (statement_keyword)
+                (argument
+                  (range
+                    (unquoted_range
+                      (start)
+                      (dots)
+                      (end))))))))))))
 
 ================================================================================
 Can parse enumerations
@@ -989,7 +1043,7 @@ module my-module-name {
       (statement
         (statement_keyword)
         (argument
-          (yang_version)))
+          (unquoted_string)))
       (statement
         (statement_keyword)
         (argument

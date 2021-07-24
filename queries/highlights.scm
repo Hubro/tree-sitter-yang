@@ -38,3 +38,6 @@
 (plus_symbol) @operator
 ["{" "}"] @punctuation.bracket
 [";"] @punctuation.delimiter
+
+; Errors
+(ERROR) @error

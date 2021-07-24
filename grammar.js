@@ -194,18 +194,13 @@ module.exports = grammar({
                         $._unescaped_double_string_fragment,
                         $.string_fragment
                     ),
-                    alias($._escape_sequence, $.escape_sequence),
+                    $.escape_sequence,
                 )),
                 '"'
             ),
             seq(
                 "'",
-                repeat(choice(
-                    $._unescaped_single_string_fragment,
-
-                    // Escape sequences should be hidden in single tick strings
-                    $._escape_sequence,
-                )),
+                $._unescaped_single_string_fragment,
                 "'"
             )
         ),
@@ -219,18 +214,13 @@ module.exports = grammar({
             token.immediate(prec(1, /[^"\\]+/)),
 
         _unescaped_single_string_fragment: $ =>
-            token.immediate(prec(1, /[^'\\]+/)),
+            token.immediate(prec(1, /[^']+/)),
 
-        _escape_sequence: $ => token.immediate(seq(
+        escape_sequence: $ => token.immediate(seq(
             '\\',
-            choice(
-                /[^xu0-7]/,
-                /[0-7]{1,3}/,
-                /x[0-9a-fA-F]{2}/,
-                /u[0-9a-fA-F]{4}/,
-                /u{[0-9a-fA-F]+}/
+            choice('n', 't', '"', '\\')
             )
-        )),
+        ),
 
         date: $ => /\d{4}-\d{2}-\d{2}/,
 

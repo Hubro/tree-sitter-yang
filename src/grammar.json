@@ -619,8 +619,16 @@
               "value": "'"
             },
             {
-              "type": "SYMBOL",
-              "name": "_unescaped_single_string_fragment"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "_unescaped_single_string_fragment"
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
             },
             {
               "type": "STRING",

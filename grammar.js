@@ -200,7 +200,7 @@ module.exports = grammar({
             ),
             seq(
                 "'",
-                $._unescaped_single_string_fragment,
+                optional($._unescaped_single_string_fragment),
                 "'"
             )
         ),

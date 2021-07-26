@@ -481,7 +481,6 @@ module my-string-testing-module {
         description 'Single tick stings!';
 
         description "Can contain \"escaped\" double quotes";
-        description 'Can contain \'escaped\' single quotes';
     }
 }
 
@@ -513,11 +512,7 @@ module my-string-testing-module {
                 (escape_sequence)
                 (string_fragment)
                 (escape_sequence)
-                (string_fragment))))
-          (statement
-            (statement_keyword)
-            (argument
-              (string))))))))
+                (string_fragment)))))))))
 
 ================================================================================
 Can parse strings with escape sequences
@@ -525,8 +520,8 @@ Can parse strings with escape sequences
 
 module my-string-testing-module {
     container lets-test-some-strings {
-        description "Can contain escape sequences like \n and \r";
-        description 'Can\'t contain any escape sequences like \n and \r';
+        description "Can contain escape sequences like \n and \t";
+        description 'Cannot contain escape sequences like \n and \t';
     }
 }
 

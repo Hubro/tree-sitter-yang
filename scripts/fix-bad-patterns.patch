@@ -1,0 +1,87 @@
+diff --git a/standard/ietf/DRAFT/ietf-isis.yang b/standard/ietf/DRAFT/ietf-isis.yang
+index 1849e992..d5ea6139 100644
+--- a/standard/ietf/DRAFT/ietf-isis.yang
++++ b/standard/ietf/DRAFT/ietf-isis.yang
+@@ -126,8 +126,8 @@ module ietf-isis {
+     typedef isis-lsp-id {
+         type string {
+             pattern
+-             "[0-9A-Fa-f]{4}\.[0-9A-Fa-f]{4}\.[0-9A-Fa-f]"
+-             +"{4}.[0-9][0-9]-[0-9][0-9]";
++             '[0-9A-Fa-f]{4}\.[0-9A-Fa-f]{4}\.[0-9A-Fa-f]'
++             +'{4}.[0-9][0-9]-[0-9][0-9]';
+         }
+         description
+          "This type defines isis LSP ID using pattern,
+@@ -135,9 +135,9 @@ module ietf-isis {
+     }
+     typedef simple-iso-address {
+         type string {
+-            pattern "[0-9A-Fa-f]{2}\.([0-9A-Fa-f]{4}\.){0,3}"
+-            +"[0-9A-Fa-f]{4}\.[0-9A-Fa-f]{4}\.[0-9A-Fa-f]{4}."
+-            +"[0-9][0-9]";
++            pattern '[0-9A-Fa-f]{2}\.([0-9A-Fa-f]{4}\.){0,3}'
++            +'[0-9A-Fa-f]{4}\.[0-9A-Fa-f]{4}\.[0-9A-Fa-f]{4}.'
++            +'[0-9][0-9]';
+         }
+         description
+          "This type defines simple iso address format,
+@@ -147,7 +147,7 @@ module ietf-isis {
+ 
+     typedef isis-system-id {
+         type string {
+-            pattern "[0-9A-Fa-f]{4}\.[0-9A-Fa-f]{4}\.[0-9A-Fa-f]{4}.00";
++            pattern '[0-9A-Fa-f]{4}\.[0-9A-Fa-f]{4}\.[0-9A-Fa-f]{4}.00';
+         }
+         description
+          "This type defines isis system id using pattern,
+@@ -1701,5 +1701,3 @@ module ietf-isis {
+     }
+ 
+ }
+-
+-
+diff --git a/standard/ietf/RFC/ietf-ipfix-psamp@2012-09-05.yang b/standard/ietf/RFC/ietf-ipfix-psamp@2012-09-05.yang
+index 744f0964..a9f9607b 100644
+--- a/standard/ietf/RFC/ietf-ipfix-psamp@2012-09-05.yang
++++ b/standard/ietf/RFC/ietf-ipfix-psamp@2012-09-05.yang
+@@ -256,7 +256,7 @@ module ietf-ipfix-psamp {
+   typedef ieNameType {
+     type string {
+       length "1..max";
+-      pattern "\S+";
++      pattern '\S+';
+     }
+     description "Type for Information Element names.  Whitespaces
+       are not allowed.";
+@@ -276,7 +276,7 @@ module ietf-ipfix-psamp {
+   typedef nameType {
+     type string {
+       length "1..max";
+-      pattern "\S(.*\S)?";
++      pattern '\S(.*\S)?';
+     }
+     description "Type for 'name' leafs, which are used to identify
+       specific instances within lists, etc.
+diff --git a/standard/ietf/RFC/ietf-netconf-acm@2012-02-22.yang b/standard/ietf/RFC/ietf-netconf-acm@2012-02-22.yang
+index 93ac229f..19ab8345 100644
+--- a/standard/ietf/RFC/ietf-netconf-acm@2012-02-22.yang
++++ b/standard/ietf/RFC/ietf-netconf-acm@2012-02-22.yang
+@@ -100,7 +100,7 @@ module ietf-netconf-acm {
+ 
+   typedef matchall-string-type {
+     type string {
+-      pattern "\*";
++      pattern '\*';
+     }
+     description
+       "The string containing a single asterisk '*' is used
+@@ -141,7 +141,7 @@ module ietf-netconf-acm {
+   typedef group-name-type {
+     type string {
+       length "1..max";
+-      pattern "[^\*].*";
++      pattern '[^\*].*';
+     }
+     description
+       "Name of administrative group to which

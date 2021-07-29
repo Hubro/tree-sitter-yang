@@ -8,7 +8,7 @@ https://datatracker.ietf.org/doc/html/rfc7950
 
 ## TODO
 
-- [ ] Implement strings properly
+- [x] Implement strings properly (Done: https://github.com/Hubro/tree-sitter-yang/pull/3)
   
   Currently the string parsing is just copied from [the Javascript grammar][javascript-grammar-string] and slightly modified to hide escape sequences in single quoted strings.
   

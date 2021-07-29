@@ -29,10 +29,21 @@
 ; Always highlight the value of an enum statement as a string
 (enum_value) @string
 
-; Highlight xpath and pattern strings differently from plain strings
+; Highlight XPath strings as special strings
 (statement
-  (statement_keyword ["pattern" "must"])
+  (statement_keyword ["when" "must"])
   (argument (string) @string.special))
+(statement
+  (statement_keyword ["when" "must"])
+  (argument (string_concatenation (string) @string.special)))
+
+; Highlight pattern strings as pattern strings
+(statement
+  (statement_keyword ["pattern"])
+  (argument (string) @string.pattern))
+(statement
+  (statement_keyword ["pattern"])
+  (argument (string_concatenation (string) @string.pattern)))
 
 ; Punctuation
 (plus_symbol) @operator

@@ -40,10 +40,10 @@
 ; Highlight pattern strings as pattern strings
 (statement
   (statement_keyword ["pattern"])
-  (argument (string) @string.pattern))
+  (argument (string) @string.regex))
 (statement
   (statement_keyword ["pattern"])
-  (argument (string_concatenation (string) @string.pattern)))
+  (argument (string_concatenation (string) @string.regex)))
 
 ; Punctuation
 (plus_symbol) @operator

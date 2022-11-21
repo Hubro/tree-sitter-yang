@@ -37,7 +37,7 @@
   (statement_keyword ["when" "must"])
   (argument (string_concatenation (string) @string.special)))
 
-; Highlight pattern strings as pattern strings
+; Highlight pattern strings as regex
 (statement
   (statement_keyword ["pattern"])
   (argument (string) @string.regex))
